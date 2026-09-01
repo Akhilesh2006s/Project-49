@@ -1,93 +1,111 @@
-import { useMemo, useState, useCallback } from 'react';
-import SPACES from './data/spaces';
-import useWalkthrough from './hooks/useWalkthrough';
-import Stage from './components/Stage';
-import Captions from './components/Captions';
-import RouteRail from './components/RouteRail';
+import { useEffect } from 'react';
+import SCENES from './data/scenes';
+import { BEATS, HERO } from './data/opening';
+import useSequence from './hooks/useSequence';
+import Opening from './components/Opening';
 
 export default function App() {
-  const spaces = SPACES;
   const {
-    frameRefs,
-    imageRefs,
-    capRefs,
-    overtureRef,
-    outroRef,
+    heroRef,
+    railRef,
+    beatRefs,
+    layerRefs,
+    videoRefs,
+    lineRefs,
+    veilRef,
+    veilDarkRef,
+    cueRef,
+    ticksRef,
     scrollerRef,
     active,
-    scrollToSpace,
-  } = useWalkthrough(spaces.length);
+    phase,
+    scrollToScene,
+    // a light hero must not be greyed down by the chapter veil
+} = useSequence(SCENES.length, BEATS.length, HERO.tone === 'light' ? 0 : 0.34);
 
-  const [ready, setReady] = useState(false);
-  const onFirstReady = useCallback(() => setReady(true), []);
-
-  // consecutive spaces sharing a movement collapse into one stop on the rail
-  const movements = useMemo(() => {
-    const out = [];
-    spaces.forEach((s, i) => {
-      const last = out[out.length - 1];
-      if (last && last.name === s.movement) last.end = i;
-      else out.push({ name: s.movement, start: i, end: i });
-    });
-    return out;
-  }, [spaces]);
+  // the masthead and cue live outside the panel, so they follow the tone here
+  useEffect(() => {
+    const on = HERO.tone === 'light' && phase === 'opening';
+    document.body.classList.toggle('opening-light', on);
+    return () => document.body.classList.remove('opening-light');
+  }, [phase]);
 
   return (
     <>
-      <div className={ready ? 'loader gone' : 'loader'}>
-        <span className="loader-mark">PROJECT 49</span>
+      <div className="stage" aria-hidden="true">
+        {SCENES.map((s, i) => (
+          <div
+            key={s.id}
+            className="layer"
+            ref={(el) => {
+              layerRefs.current[i] = el;
+            }}
+          >
+            <video
+              className="layer-video"
+              ref={(el) => {
+                videoRefs.current[i] = el;
+              }}
+              src={s.video}
+              poster={s.poster}
+              muted
+              loop
+              playsInline
+              preload={i === 0 ? 'auto' : 'metadata'}
+              // A clip that becomes playable after the last render would sit
+              // paused until the next scroll. Nudge the driver instead: it
+              // plays whatever is on screen and pauses the rest.
+              onCanPlay={() => window.dispatchEvent(new Event('scroll'))}
+            />
+          </div>
+        ))}
       </div>
 
-      <Stage
-        spaces={spaces}
-        frameRefs={frameRefs}
-        imageRefs={imageRefs}
-        onFirstReady={onFirstReady}
-      />
+      <Opening heroRef={heroRef} railRef={railRef} beatRefs={beatRefs} />
 
-      <div className="scrim" />
-      <div className="grain" />
+      {/* blurs the light behind the words, and only while the words are up */}
+      <div className="veil" ref={veilRef} aria-hidden="true" />
+      {/* and darkens it — these clips go near-white, and ivory on a sunlit
+          wall is unreadable without it. Opacity rides the same curve. */}
+      <div className="veil-dark" ref={veilDarkRef} aria-hidden="true" />
+      <div className="grain" aria-hidden="true" />
 
       <header className="mast">
         <span className="mast-mark">PROJECT 49</span>
-        <span className="mast-idea">01 / LIGHT</span>
+        <span className={phase === 'chapters' ? 'mast-idea on' : 'mast-idea'}>01 / LIGHT</span>
       </header>
 
-      <div className="overture" ref={overtureRef}>
-        <p className="overture-eyebrow">IDEA 01 &middot; SEVEN HOMES</p>
-        <h1 className="overture-title">
-          A house built
-          <br />
-          with <em>light</em>
-        </h1>
-        <p className="overture-sub">HYDERABAD &middot; 7,000 SQ FT</p>
-        <div className="overture-cue">
-          SCROLL TO WALK THROUGH
-          <span />
-        </div>
+      <div className="lines">
+        {SCENES.map((s, i) => (
+          <div
+            key={s.id}
+            className="line"
+            ref={(el) => {
+              lineRefs.current[i] = el;
+            }}
+          >
+            <p className="line-eyebrow">{s.eyebrow}</p>
+            <p className="line-text">{s.line}</p>
+          </div>
+        ))}
       </div>
 
-      <Captions spaces={spaces} capRefs={capRefs} />
+      <nav className="ticks" ref={ticksRef} aria-label="Chapters">
+        {SCENES.map((s, i) => (
+          <button
+            key={s.id}
+            type="button"
+            className={i === active ? 'tick on' : 'tick'}
+            aria-current={i === active ? 'true' : undefined}
+            aria-label={s.line}
+            onClick={() => scrollToScene(i)}
+          />
+        ))}
+      </nav>
 
-      <RouteRail
-        movements={movements}
-        spaces={spaces}
-        active={active}
-        onJump={scrollToSpace}
-      />
-
-      <div className="outro" ref={outroRef}>
-        <p className="outro-meta">END OF WALKTHROUGH</p>
-        <p className="outro-line">
-          The philosophy repeats.
-          <br />
-          The building never does.
-        </p>
-        <p className="outro-note">
-          One of seven homes under Idea 01. Six further ideas &mdash; Air, Art,
-          Roots, Land, Silence, Water &mdash; each with their own seven.
-        </p>
-      </div>
+      <p className="cue" ref={cueRef} aria-hidden="true">
+        SCROLL
+      </p>
 
       {/* the only element in flow: its height is what there is to scroll */}
       <div className="scroller" ref={scrollerRef} />
