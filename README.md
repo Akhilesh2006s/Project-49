@@ -1,7 +1,10 @@
-# PROJECT 49 — Idea 01 / Light
+# PROJECT 49
 
 A scroll-driven sequence. The opening travels sideways; the chapters that
 follow travel down. Each chapter is one looping clip and one line.
+
+Two of the seven ideas are built: **01 / LIGHT** (three chapters) and
+**02 / AIR** (two).
 
 Deliberately **not** architectural renders. Showing a finished building anchors
 a buyer to that building — the concept being sold here is light, hour and
@@ -62,10 +65,27 @@ of their own.
 
 ### The hero still
 
-`public/opening/hero.jpg` (1920 wide) and `public/opening/hero-1280.jpg` are
-currently a **placeholder** graded out of the prismatic clip. The opening is
-composed for a dark, quiet frame; overwrite both files with the real still and
-nothing else needs to change.
+`public/opening/hero.jpg` (1920 wide) and `public/opening/hero-1280.jpg` drive
+the opening; the PNG masters live in `source/`. `HERO.tone` in
+`src/data/opening.js` says whether that image is `'light'` or `'dark'`, and the
+opening inverts wholesale to suit — ink on paper with pools of light, or ivory
+over pools of shade. Set it when you swap the image; nothing else changes.
+
+To swap:
+
+```bash
+ffmpeg -i source/your-hero.png -vf scale=1920:-2 -q:v 3 public/opening/hero.jpg
+ffmpeg -i source/your-hero.png -vf scale=1280:-2 -q:v 4 public/opening/hero-1280.jpg
+```
+
+### Idea cards
+
+`CARDS` in `src/data/scenes.js` announces a new idea mid-run. Each card's `at`
+sits on a **half** unit of scene-space, which is the midpoint of a crossfade —
+two clips dissolving, no chapter line up. The break lands in a gap the sequence
+already has, so no extra scroll has to be invented for it, and the card takes
+the centre from the lines while it is there. Idea 01 has no card: the
+horizontal opening already delivers it.
 
 ## How a scene works
 
@@ -105,9 +125,13 @@ Each of these was a real bug, and each is easy to reintroduce.
   element's own font; on the wrapper it is still 16px Inter, which produced a
   ~220px column and broke every line into four rows.
 - **`.veil-dark`'s centre alpha is set by measurement.** At 0.74 the shadow
-  clip's sunlit wall sat at 2.99:1 against ivory. 0.80 puts all three clips
-  above the 3:1 large-text minimum. If you swap a clip for a brighter one,
-  re-check it rather than trusting the number.
+  clip's sunlit wall sat at 2.99:1 against ivory. 0.80 puts every clip above
+  the 3:1 large-text minimum. If you swap a clip for a brighter one, re-check
+  it rather than trusting the number.
+- **Small gold over video has to be `--gold-pale`.** `--gold` measured
+  1.65–1.96:1 on the eyebrow labels across all five clips, and `--gold-lift`
+  only reached ~2.5. `#ebdcc0` clears 3:1 and still reads warm. The darker
+  golds are fine over the scrimmed hero, but not over footage.
 
 ## Adding a scene
 
@@ -144,6 +168,15 @@ you want real match-cuts, they have to be commissioned as a chain.
 
 ## Adding the other ideas
 
-This covers Idea 01. For AIR, ART, ROOTS, EARTH, SILENCE or FUTURE, add a data
-file alongside `scenes.js` and a route to pick between them, and point
-`LIT_IDEA` at the matching name so the opening hands off to the right chapter.
+ART, ROOTS, EARTH, SILENCE and FUTURE follow the same two steps AIR did:
+
+1. Append the clips to `SCENES` with their `idea` set.
+2. Add a `CARDS` entry at the half unit where the new idea begins — that is
+   `(index of its first scene) - 0.5` in scene-space.
+
+The masthead reads the current idea off the active scene and numbers it by
+order of first appearance, so it needs no updating.
+
+Measured contrast for every new clip before shipping it — the check that
+matters is ivory and `--gold-pale` against the brightest 2% of the band the
+text occupies, under the 0.80 veil.

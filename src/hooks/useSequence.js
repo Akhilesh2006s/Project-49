@@ -45,7 +45,7 @@ const maxScroll = () =>
     document.body ? document.body.scrollHeight : 0
   ) - window.innerHeight;
 
-export function useSequence(sceneCount, beatCount, openingTint = 0.34) {
+export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.34) {
   const span = OPEN_SPAN + (sceneCount - 1) + TAIL;
 
   const heroRef = useRef(null);
@@ -54,6 +54,7 @@ export function useSequence(sceneCount, beatCount, openingTint = 0.34) {
   const layerRefs = useRef([]);
   const videoRefs = useRef([]);
   const lineRefs = useRef([]);
+  const cardRefs = useRef([]);
   const veilRef = useRef(null);
   const veilDarkRef = useRef(null);
   const cueRef = useRef(null);
@@ -197,6 +198,28 @@ export function useSequence(sceneCount, beatCount, openingTint = 0.34) {
         }
       }
 
+      /* ---------- idea cards ---------- */
+      // Placed on half units, so they land in the gap between two chapters.
+      let cardText = 0;
+      for (let k = 0; k < cards.length; k++) {
+        const el = cardRefs.current[k];
+        if (!el) continue;
+        const d = sp - cards[k].at;
+        const o = clamp((0.68 - Math.abs(d)) / 0.32, 0, 1);
+        el.style.opacity = String(o);
+        el.style.transform = `translateY(${clamp(d, -1, 1) * -10}px)`;
+        if (o > cardText) cardText = o;
+      }
+      // a card owns the centre while it is up
+      if (cardText > 0) {
+        for (let i = 0; i < sceneCount; i++) {
+          const line = lineRefs.current[i];
+          if (!line) continue;
+          line.style.opacity = String((+line.style.opacity || 0) * (1 - cardText));
+        }
+        sceneText = Math.max(sceneText * (1 - cardText), cardText);
+      }
+
       /* ---------- veils ---------- */
       // Blur only while words are up, and gentler over the opening so the hero
       // keeps its edge during the reveal.
@@ -275,7 +298,7 @@ export function useSequence(sceneCount, beatCount, openingTint = 0.34) {
       document.removeEventListener('visibilitychange', onVisibility);
       ro.disconnect();
     };
-  }, [sceneCount, beatCount, openingTint, span]);
+  }, [sceneCount, beatCount, cards, openingTint, span]);
 
   const scrollToScene = useCallback(
     (i) => {
@@ -294,6 +317,7 @@ export function useSequence(sceneCount, beatCount, openingTint = 0.34) {
     layerRefs,
     videoRefs,
     lineRefs,
+    cardRefs,
     veilRef,
     veilDarkRef,
     cueRef,

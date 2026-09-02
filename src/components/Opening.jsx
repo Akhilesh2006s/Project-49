@@ -13,7 +13,7 @@ export default function Opening({ heroRef, railRef, beatRefs }) {
       <div className="hero" ref={heroRef} aria-hidden="true">
         <picture>
           <source media="(max-width: 900px)" srcSet={HERO.sm} />
-          <img className="hero-img" src={HERO.lg} alt="" decoding="async" fetchPriority="high" />
+          <img className="hero-img" src={HERO.lg} alt="" decoding="async" fetchpriority="high" />
         </picture>
       </div>
 

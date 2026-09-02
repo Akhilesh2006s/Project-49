@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import SCENES from './data/scenes';
+import SCENES, { CARDS } from './data/scenes';
 import { BEATS, HERO } from './data/opening';
 import useSequence from './hooks/useSequence';
 import Opening from './components/Opening';
@@ -12,6 +12,7 @@ export default function App() {
     layerRefs,
     videoRefs,
     lineRefs,
+    cardRefs,
     veilRef,
     veilDarkRef,
     cueRef,
@@ -21,7 +22,7 @@ export default function App() {
     phase,
     scrollToScene,
     // a light hero must not be greyed down by the chapter veil
-} = useSequence(SCENES.length, BEATS.length, HERO.tone === 'light' ? 0 : 0.34);
+  } = useSequence(SCENES.length, BEATS.length, CARDS, HERO.tone === 'light' ? 0 : 0.34);
 
   // the masthead and cue live outside the panel, so they follow the tone here
   useEffect(() => {
@@ -72,7 +73,15 @@ export default function App() {
 
       <header className="mast">
         <span className="mast-mark">PROJECT 49</span>
-        <span className={phase === 'chapters' ? 'mast-idea on' : 'mast-idea'}>01 / LIGHT</span>
+        <span className={phase === 'chapters' ? 'mast-idea on' : 'mast-idea'}>
+          {(() => {
+            const idea = SCENES[active]?.idea ?? 'LIGHT';
+            const no = String(
+              [...new Set(SCENES.map((s) => s.idea))].indexOf(idea) + 1
+            ).padStart(2, '0');
+            return `${no} / ${idea}`;
+          })()}
+        </span>
       </header>
 
       <div className="lines">
@@ -86,6 +95,24 @@ export default function App() {
           >
             <p className="line-eyebrow">{s.eyebrow}</p>
             <p className="line-text">{s.line}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="cards">
+        {CARDS.map((c, i) => (
+          <div
+            key={c.id}
+            className="idea-card"
+            ref={(el) => {
+              cardRefs.current[i] = el;
+            }}
+          >
+            <p className="chapter-num">
+              {c.no} / {c.name}
+            </p>
+            <h2 className="chapter-title">{c.title}</h2>
+            <p className="chapter-sub">{c.sub}</p>
           </div>
         ))}
       </div>
