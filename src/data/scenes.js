@@ -48,6 +48,14 @@ export const SCENES = [
     video: '/scenes/05-breath.mp4',
     poster: '/scenes/05-breath.jpg',
   },
+  {
+    id: 'trace',
+    idea: 'AIR',
+    eyebrow: 'Trace',
+    line: 'You see the air before you feel it.',
+    video: '/scenes/06-trace.mp4',
+    poster: '/scenes/06-trace.jpg',
+  },
 ];
 
 /**

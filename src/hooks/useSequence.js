@@ -210,14 +210,19 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
         el.style.transform = `translateY(${clamp(d, -1, 1) * -10}px)`;
         if (o > cardText) cardText = o;
       }
-      // a card owns the centre while it is up
+      // A card owns the centre while it is up. The gate is doubled on purpose:
+      // a plain (1 - cardText) has the two crossing at 0.5/0.5, and two
+      // different texts dissolving through each other in the same well reads as
+      // ghosting. Doubling holds the line at zero until the card is most of the
+      // way out, so the centre is handed over through a gap rather than a blend.
       if (cardText > 0) {
+        const gate = clamp(1 - cardText * 2, 0, 1);
         for (let i = 0; i < sceneCount; i++) {
           const line = lineRefs.current[i];
           if (!line) continue;
-          line.style.opacity = String((+line.style.opacity || 0) * (1 - cardText));
+          line.style.opacity = String((+line.style.opacity || 0) * gate);
         }
-        sceneText = Math.max(sceneText * (1 - cardText), cardText);
+        sceneText = Math.max(sceneText * gate, cardText);
       }
 
       /* ---------- veils ---------- */
