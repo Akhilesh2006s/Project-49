@@ -84,7 +84,7 @@ export default function App() {
           ))}
         </h1>
         <p className="wordmark-sub" ref={subRef}>
-          Seven ideas. One extraordinary home.
+          49 Homes. 7 Ideas. 1 City.
         </p>
       </div>
 
