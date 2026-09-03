@@ -70,15 +70,4 @@ export const SCENES = [
  *
  * Idea 01 has no card here — the horizontal opening already delivers it.
  */
-export const CARDS = [
-  {
-    id: 'air',
-    at: 2.5,
-    no: '02',
-    name: 'AIR',
-    title: 'A home that breathes',
-    sub: 'Air becomes architecture.',
-  },
-];
-
 export default SCENES;

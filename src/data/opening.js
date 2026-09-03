@@ -1,9 +1,6 @@
 /**
- * The opening is one composition, not a sequence of cards: the wordmark, the
- * line, and all seven names together on the dark wall.
- *
- * Scrolling slides it left — the page travels right — into the chapter card.
- * From there the chapters run vertically.
+ * The seven ideas, in the order they are listed on the menu. An idea with no
+ * chapters in scenes.js still appears there, greyed and inert.
  */
 
 export const IDEAS = ['LIGHT', 'AIR', 'ART', 'ROOTS', 'EARTH', 'SILENCE', 'FUTURE'];
@@ -35,10 +32,3 @@ export const HERO = {
   // dark one. Set this when you swap the image; nothing else needs touching.
   tone: 'dark',
 };
-
-export const BEATS = [
-  { id: 'opening', kind: 'opening' },
-  { id: 'chapter', kind: 'chapter' },
-];
-
-export default BEATS;
