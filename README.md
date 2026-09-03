@@ -50,7 +50,7 @@ Everything lives in `src/hooks/useJourney.js`. Four modes:
   wordmark fades and lifts, the menu rises and scales into place behind it.
 - **menu** — the seven, four across and three centred beneath. Clicking a
   name opens it.
-- **collab** — one more screen: who made this (Ayra × Anxa), with a tab for
+- **collab** — one more screen: who made this (Ayra × Rnxa), with a tab for
   each partner's own experience. The entries live in `src/data/collab.js`.
 - **idea** — the page's scroll now belongs to that idea's chapters. Past the
   last chapter there is a short tail of travel, and then it closes itself and

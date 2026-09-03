@@ -18,8 +18,8 @@ export const COLLAB = {
       ],
     },
     {
-      id: 'anxa',
-      name: 'Anxa',
+      id: 'rnxa',
+      name: 'Rnxa',
       role: 'Digital',
       experience: [
         { title: 'Project 49', meta: 'Experience · 2026' },
