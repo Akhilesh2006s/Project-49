@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" role="img" aria-label="LIGHT">
+  <defs>
+    <linearGradient id="p49gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f1de"/>
+      <stop offset=".45" stop-color="#ead9b4"/>
+      <stop offset="1" stop-color="#f4e9cd"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#p49gold)">
+    <g transform="translate(20,0)">
+      <path d="M0,45 L17,45 L17,250 L0,250 Z"/>
+      <path d="M0,240 C42,248 94,251 144,246 C164,244 178,240 190,235 L192,240 C178,247 160,251 140,254 C90,259 40,256 0,250 Z"/>
+    </g>
+    <g transform="translate(216,0)">
+      <path d="M0,45 L12,45 L12,250 L0,250 Z"/>
+    </g>
+    <g transform="translate(262,0)">
+      <path d="M104,42 C46,42 8,88 8,148 C8,208 47,253 106,253 C142,253 168,240 184,222 L184,146 L118,146 L118,153 L169,153 L169,218 C156,232 136,244 107,244 C57,244 24,202 24,148 C24,94 57,50 104,50 C134,50 157,63 172,84 L179,78 C161,52 135,42 104,42 Z"/>
+    </g>
+    <g transform="translate(470,0)">
+      <path d="M0,45 L17,45 L17,250 L0,250 Z"/>
+      <path d="M143,45 L160,45 L160,250 L143,250 Z"/>
+      <path d="M17,147 L143,147 L143,151 L17,151 Z"/>
+    </g>
+    <g transform="translate(662,0)">
+      <path d="M0,48 C36,46 132,46 168,48 L168,53 C132,51 36,51 0,53 Z"/>
+      <path d="M76,50 L93,50 L93,250 L76,250 Z"/>
+    </g>
+  </g>
+</svg>

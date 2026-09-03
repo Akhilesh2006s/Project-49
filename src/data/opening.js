@@ -22,7 +22,10 @@ export const IDEAS = ['LIGHT', 'AIR', 'ART', 'ROOTS', 'EARTH', 'SILENCE', 'FUTUR
  *
  *   LIGHT: '/marks/light.svg',
  */
-export const MARKS = {};
+export const MARKS = {
+  LIGHT: '/marks/light.svg',
+  AIR: '/marks/air.svg',
+};
 
 export const HERO = {
   lg: '/opening/hero.jpg',
