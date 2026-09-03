@@ -8,6 +8,22 @@
 
 export const IDEAS = ['LIGHT', 'AIR', 'ART', 'ROOTS', 'EARTH', 'SILENCE', 'FUTURE'];
 
+/**
+ * Drawn logotypes for the concept titles.
+ *
+ * The reference mark is bespoke — its R has a swash leg and its A a hairline
+ * that drops below the baseline. No free webfont carries those: measured
+ * across Cormorant, Cormorant Garamond and EB Garamond, none has a swash or
+ * stylistic alternate at all, and Bodoni Moda's weight axis bottoms out at
+ * 400, so 400 is already its thinnest.
+ *
+ * Drop an SVG in here per idea and it replaces the live text; anything absent
+ * falls back to the typeface. Export at any size — it scales.
+ *
+ *   LIGHT: '/marks/light.svg',
+ */
+export const MARKS = {};
+
 export const HERO = {
   lg: '/opening/hero.jpg',
   sm: '/opening/hero-1280.jpg',

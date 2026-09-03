@@ -1,10 +1,22 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import SCENES, { CARDS } from './data/scenes';
-import { BEATS, HERO } from './data/opening';
+import { BEATS, HERO, MARKS } from './data/opening';
 import useSequence from './hooks/useSequence';
 import Opening from './components/Opening';
 
 export default function App() {
+  // Each idea owns a stretch of the run. The concept title belongs to the idea,
+  // so it holds while the statement beneath it changes chapter to chapter.
+  const ideaRanges = useMemo(() => {
+    const out = [];
+    SCENES.forEach((s, i) => {
+      const last = out[out.length - 1];
+      if (last && last.name === s.idea) last.to = i;
+      else out.push({ name: s.idea, from: i, to: i });
+    });
+    return out;
+  }, []);
+
   const {
     heroRef,
     railRef,
@@ -13,6 +25,7 @@ export default function App() {
     videoRefs,
     lineRefs,
     cardRefs,
+    ideaRefs,
     veilRef,
     veilDarkRef,
     cueRef,
@@ -22,7 +35,13 @@ export default function App() {
     phase,
     scrollToScene,
     // a light hero must not be greyed down by the chapter veil
-  } = useSequence(SCENES.length, BEATS.length, CARDS, HERO.tone === 'light' ? 0 : 0.34);
+  } = useSequence(
+    SCENES.length,
+    BEATS.length,
+    CARDS,
+    ideaRanges,
+    HERO.tone === 'light' ? 0 : 0.34
+  );
 
   // the masthead and cue live outside the panel, so they follow the tone here
   useEffect(() => {
@@ -30,6 +49,9 @@ export default function App() {
     document.body.classList.toggle('opening-light', on);
     return () => document.body.classList.remove('opening-light');
   }, [phase]);
+
+  const activeIdea = SCENES[active]?.idea ?? 'LIGHT';
+  const activeIdeaNo = ideaRanges.findIndex((r) => r.name === activeIdea) + 1;
 
   return (
     <>
@@ -74,28 +96,45 @@ export default function App() {
       <header className="mast">
         <span className="mast-mark">PROJECT 49</span>
         <span className={phase === 'chapters' ? 'mast-idea on' : 'mast-idea'}>
-          {(() => {
-            const idea = SCENES[active]?.idea ?? 'LIGHT';
-            const no = String(
-              [...new Set(SCENES.map((s) => s.idea))].indexOf(idea) + 1
-            ).padStart(2, '0');
-            return `${no} / ${idea}`;
-          })()}
+          {String(activeIdeaNo).padStart(2, '0')} / {activeIdea}
         </span>
       </header>
 
-      <div className="lines">
+      {/* the concept, held for the length of its idea */}
+      <div className="concepts" aria-hidden="true">
+        {ideaRanges.map((r, i) => (
+          <h2
+            key={r.name}
+            className="concept"
+            ref={(el) => {
+              ideaRefs.current[i] = el;
+            }}
+          >
+            {MARKS[r.name] ? (
+              <img className="concept-mark" src={MARKS[r.name]} alt="" />
+            ) : (
+              r.name
+            )}
+          </h2>
+        ))}
+      </div>
+
+      {/* one statement beneath it, changing chapter to chapter */}
+      <div className="statements">
         {SCENES.map((s, i) => (
-          <div
+          <p
             key={s.id}
-            className="line"
+            className="statement"
             ref={(el) => {
               lineRefs.current[i] = el;
             }}
           >
-            <p className="line-eyebrow">{s.eyebrow}</p>
-            <p className="line-text">{s.line}</p>
-          </div>
+            {s.line.map((part, k) => (
+              <span className="statement-row" key={k}>
+                {part}
+              </span>
+            ))}
+          </p>
         ))}
       </div>
 
@@ -108,23 +147,23 @@ export default function App() {
               cardRefs.current[i] = el;
             }}
           >
-            <p className="chapter-num">
+            <p className="card-num">
               {c.no} / {c.name}
             </p>
-            <h2 className="chapter-title">{c.title}</h2>
-            <p className="chapter-sub">{c.sub}</p>
+            <p className="card-sub">{c.sub}</p>
           </div>
         ))}
       </div>
 
-      <nav className="ticks" ref={ticksRef} aria-label="Chapters">
+      {/* the quietest thing on the page: position, not decoration */}
+      <nav className="marks" ref={ticksRef} aria-label="Chapters">
         {SCENES.map((s, i) => (
           <button
             key={s.id}
             type="button"
-            className={i === active ? 'tick on' : 'tick'}
+            className={i === active ? 'mark on' : 'mark'}
             aria-current={i === active ? 'true' : undefined}
-            aria-label={s.line}
+            aria-label={`${s.idea} — ${s.eyebrow}`}
             onClick={() => scrollToScene(i)}
           />
         ))}

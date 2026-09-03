@@ -1,5 +1,7 @@
 /**
- * One scene = one light study + one line.
+ * One scene = one light study + one statement, set as two short
+ * clauses. Two lines balance under the concept title; a single long
+ * sentence wraps ragged and fights it.
  *
  * Order is the order you scroll. `idea` groups them; when the idea changes a
  * CARD announces the new one (see below).
@@ -12,7 +14,7 @@ export const SCENES = [
     id: 'gradient',
     idea: 'LIGHT',
     eyebrow: 'Gradient',
-    line: 'Light paints your walls.',
+    line: ['Light paints', 'your walls.'],
     video: '/scenes/01-gradient.mp4',
     poster: '/scenes/01-gradient.jpg',
   },
@@ -20,7 +22,7 @@ export const SCENES = [
     id: 'day',
     idea: 'LIGHT',
     eyebrow: 'Hour',
-    line: 'The day moves through your rooms.',
+    line: ['Through the day,', 'the house changes.'],
     video: '/scenes/02-day.mp4',
     poster: '/scenes/02-day.jpg',
   },
@@ -28,7 +30,7 @@ export const SCENES = [
     id: 'shadow',
     idea: 'LIGHT',
     eyebrow: 'Shadow',
-    line: 'Let the shadows speak.',
+    line: ['Let the shadows', 'speak.'],
     video: '/scenes/03-shadow.mp4',
     poster: '/scenes/03-shadow.jpg',
   },
@@ -36,7 +38,7 @@ export const SCENES = [
     id: 'wind',
     idea: 'AIR',
     eyebrow: 'Wind',
-    line: 'The air is never still.',
+    line: ['The air is', 'never still.'],
     video: '/scenes/04-wind.mp4',
     poster: '/scenes/04-wind.jpg',
   },
@@ -44,7 +46,7 @@ export const SCENES = [
     id: 'breath',
     idea: 'AIR',
     eyebrow: 'Breath',
-    line: 'Your home breathes.',
+    line: ['Let the house', 'breathe.'],
     video: '/scenes/05-breath.mp4',
     poster: '/scenes/05-breath.jpg',
   },
@@ -52,7 +54,7 @@ export const SCENES = [
     id: 'trace',
     idea: 'AIR',
     eyebrow: 'Trace',
-    line: 'You see the air before you feel it.',
+    line: ['Nothing to see.', 'Everything to feel.'],
     video: '/scenes/06-trace.mp4',
     poster: '/scenes/06-trace.jpg',
   },

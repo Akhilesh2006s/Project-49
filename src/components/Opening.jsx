@@ -15,6 +15,8 @@ export default function Opening({ heroRef, railRef, beatRefs }) {
           <source media="(max-width: 900px)" srcSet={HERO.sm} />
           <img className="hero-img" src={HERO.lg} alt="" decoding="async" fetchpriority="high" />
         </picture>
+        <div className="hero-sweep" aria-hidden="true" />
+        <div className="hero-bloom" aria-hidden="true" />
       </div>
 
       <div className="rail" ref={railRef}>
@@ -41,7 +43,7 @@ export default function Opening({ heroRef, railRef, beatRefs }) {
                 </div>
                 <ul className="ideas">
                   {IDEAS.map((name, k) => (
-                    <li key={name} className="idea" style={{ animationDelay: `${0.9 + k * 0.11}s` }}>
+                    <li key={name} className="idea" style={{ animationDelay: `${2.25 + k * 0.13}s` }}>
                       {name}
                     </li>
                   ))}

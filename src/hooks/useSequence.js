@@ -24,8 +24,16 @@ export const CROSSFADE = 0.6;   // share of a segment spent dissolving
 // How much scrolling one step costs, as a multiple of a viewport. This is the
 // dial for pace: it stretches the whole timeline without touching any of the
 // curves, so blends get longer while the holds keep their proportions.
-export const PACE = 1.9;
-export const SCENE_BLUR = 7;    // px behind a chapter line
+export const PACE = 1.5;
+// How hard `p` is pulled toward the scroll position each frame. Scroll
+// events are coarse and arrive in bursts; easing toward the target rather
+// than snapping to it is what makes the sequence feel like film, not steps.
+export const SMOOTH = 0.11;
+// How far apart the characters of a line arrive. Higher is a longer,
+// more theatrical cascade; 0 makes the whole line land at once.
+export const SCENE_BLUR = 2.5;  // px behind a statement. The architecture
+                                // is the hero — the darkening carries the
+                                // contrast, so this stays barely there.
 export const OPEN_BLUR = 0;     // the opening stays sharp; the hero is dark enough already
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
@@ -45,7 +53,13 @@ const maxScroll = () =>
     document.body ? document.body.scrollHeight : 0
   ) - window.innerHeight;
 
-export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.34) {
+export function useSequence(
+  sceneCount,
+  beatCount,
+  cards = [],
+  ideaRanges = [],
+  openingTint = 0.34
+) {
   const span = OPEN_SPAN + (sceneCount - 1) + TAIL;
 
   const heroRef = useRef(null);
@@ -55,6 +69,7 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
   const videoRefs = useRef([]);
   const lineRefs = useRef([]);
   const cardRefs = useRef([]);
+  const ideaRefs = useRef([]);
   const veilRef = useRef(null);
   const veilDarkRef = useRef(null);
   const cueRef = useRef(null);
@@ -70,8 +85,11 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
     const reduced = prefersReduced();
     const playing = new Array(sceneCount).fill(false);
     let raf = 0;
-    let queued = false;
+    let running = false;
+    let current = 0;
+    let target = 0;
     let lastBlur = -1;
+    const lastTrack = [];
 
     const layout = () => {
       const h = window.innerHeight;
@@ -83,11 +101,7 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
       }
     };
 
-    const render = () => {
-      const max = maxScroll();
-      // Progress is a fraction of the scrollable range, never pixels per
-      // segment — so it cannot overrun when the viewport measures zero.
-      const p = max > 0 ? clamp(scrollTop() / max, 0, 1) * span : 0;
+    const render = (p) => {
 
       /* ---------- opening ---------- */
       const op = clamp(p, 0, OPEN_SPAN);
@@ -129,8 +143,57 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
         if (o > openingText) openingText = o;
       }
 
-      /* ---------- chapters ---------- */
       const sp = p - OPEN_SPAN;
+
+      /* ---------- idea cards ---------- */
+      // Placed on half units, so they land in the gap between two chapters.
+      let cardText = 0;
+      for (let k = 0; k < cards.length; k++) {
+        const el = cardRefs.current[k];
+        if (!el) continue;
+        const d = sp - cards[k].at;
+        const o = clamp((0.68 - Math.abs(d)) / 0.32, 0, 1);
+        el.style.opacity = String(o);
+        el.style.transform = "translateY(" + clamp(d, -1, 1) * -10 + "px)";
+        if (o > cardText) cardText = o;
+      }
+      // A card owns the centre while it is up. The gate is doubled on purpose:
+      // a plain (1 - cardText) has card and line crossing at 0.5/0.5, and two
+      // different texts dissolving through each other in one well reads as
+      // ghosting. Doubling hands the centre over through a gap instead.
+      const cardGate = clamp(1 - cardText * 2, 0, 1);
+
+      /* ---------- the concept ---------- */
+      // Driven by the idea's whole RANGE, so scrolling between two chapters of
+      // one idea leaves the title untouched. It arrives on a slow fade, a small
+      // rise, and a tracking that settles inward — no splitting, no scaling.
+      let ideaText = 0;
+      for (let k = 0; k < ideaRanges.length; k++) {
+        const el = ideaRefs.current[k];
+        if (!el) continue;
+        const r = ideaRanges[k];
+        const outside = sp < r.from ? r.from - sp : sp > r.to ? sp - r.to : 0;
+        const o = clamp((0.5 - outside) / 0.25, 0, 1) * cardGate;
+        if (o <= 0.002) {
+          if (el.style.display !== "none") el.style.display = "none";
+          continue;
+        }
+        if (el.style.display === "none") el.style.display = "";
+        el.style.opacity = String(o);
+        if (!reduced) {
+          el.style.transform = "translate3d(0," + ((1 - o) * 16).toFixed(1) + "px,0)";
+          // letter-spacing is a LAYOUT property, so it is quantised: written
+          // only when it actually changes, not on every frame.
+          const track = Math.round((0.075 - o * 0.06) * 1000) / 1000;
+          if (track !== lastTrack[k]) {
+            lastTrack[k] = track;
+            el.style.letterSpacing = track + "em";
+          }
+        }
+        if (o > ideaText) ideaText = o;
+      }
+
+      /* ---------- chapters ---------- */
       let idx = 0;
       let best = -1;
       let sceneText = 0;
@@ -147,15 +210,15 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
         const o = clamp((1 - a) / CROSSFADE, 0, 1);
 
         if (o <= 0.002) {
-          if (layer.style.display !== 'none') layer.style.display = 'none';
-          if (line) line.style.opacity = '0';
+          if (layer.style.display !== "none") layer.style.display = "none";
+          if (line) line.style.opacity = "0";
           if (video && playing[i]) {
             video.pause();
             playing[i] = false;
           }
           continue;
         }
-        if (layer.style.display === 'none') layer.style.display = '';
+        if (layer.style.display === "none") layer.style.display = "";
         layer.style.opacity = String(o);
 
         // Only the clips actually on screen are decoding. Mark as playing only
@@ -180,16 +243,22 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
           // Scale stays ahead of the shift so no edge is ever exposed —
           // 1.08 gives 4% headroom a side against a 3.5% travel.
           const scale = 1.08 + (tc + 1) * 0.04;
-          video.style.transform = `translate3d(0, ${-tc * 3.5}%, 0) scale(${scale})`;
+          video.style.transform =
+            "translate3d(0," + -tc * 3.5 + "%,0) scale(" + scale + ")";
         }
 
         if (line) {
-          // A chapter line never shares the screen with an opening beat — the
-          // handoff overlaps by design, so this hands the centre over cleanly.
-          const lo = clamp((0.62 - a) / 0.3, 0, 1) * (1 - openingText);
-          line.style.opacity = String(lo);
-          line.style.transform = `translateY(${clamp(tOp, -1, 1) * -10}px)`;
-          if (lo > sceneText) sceneText = lo;
+          const gate = (1 - openingText) * cardGate;
+          // Zero by a = 0.5, which is the midpoint between two chapters — so
+          // adjacent statements are never both visible. Crossfading two
+          // different texts in one position is ghosting, not a transition.
+          const reveal = clamp((0.5 - a) / 0.22, 0, 1) * gate;
+          line.style.opacity = String(reveal);
+          if (!reduced) {
+            line.style.transform =
+              "translate3d(0," + ((1 - reveal) * 12).toFixed(1) + "px,0)";
+          }
+          if (reveal > sceneText) sceneText = reveal;
         }
 
         if (o > best) {
@@ -197,33 +266,7 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
           idx = i;
         }
       }
-
-      /* ---------- idea cards ---------- */
-      // Placed on half units, so they land in the gap between two chapters.
-      let cardText = 0;
-      for (let k = 0; k < cards.length; k++) {
-        const el = cardRefs.current[k];
-        if (!el) continue;
-        const d = sp - cards[k].at;
-        const o = clamp((0.68 - Math.abs(d)) / 0.32, 0, 1);
-        el.style.opacity = String(o);
-        el.style.transform = `translateY(${clamp(d, -1, 1) * -10}px)`;
-        if (o > cardText) cardText = o;
-      }
-      // A card owns the centre while it is up. The gate is doubled on purpose:
-      // a plain (1 - cardText) has the two crossing at 0.5/0.5, and two
-      // different texts dissolving through each other in the same well reads as
-      // ghosting. Doubling holds the line at zero until the card is most of the
-      // way out, so the centre is handed over through a gap rather than a blend.
-      if (cardText > 0) {
-        const gate = clamp(1 - cardText * 2, 0, 1);
-        for (let i = 0; i < sceneCount; i++) {
-          const line = lineRefs.current[i];
-          if (!line) continue;
-          line.style.opacity = String((+line.style.opacity || 0) * gate);
-        }
-        sceneText = Math.max(sceneText * gate, cardText);
-      }
+      sceneText = Math.max(sceneText, cardText, ideaText * 0.9);
 
       /* ---------- veils ---------- */
       // Blur only while words are up, and gentler over the opening so the hero
@@ -260,31 +303,60 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
       }
     };
 
+    // Progress is read as a FRACTION of the scrollable range, never as pixels
+    // per segment — so it cannot overrun when the viewport measures zero.
+    const readTarget = () => {
+      const max = maxScroll();
+      target = max > 0 ? clamp(scrollTop() / max, 0, 1) * span : 0;
+    };
+
+    // `current` chases `target` rather than snapping to it. Scroll events are
+    // coarse and bursty; this is what turns them into continuous motion.
+    const tick = () => {
+      const d = target - current;
+      if (Math.abs(d) < 0.0004) {
+        current = target;
+        running = false;
+        render(current);
+        return;
+      }
+      current += d * SMOOTH;
+      render(current);
+      raf = requestAnimationFrame(tick);
+    };
+
+    const kick = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(tick);
+    };
+
     const onScroll = () => {
-      if (queued) return;
-      queued = true;
-      raf = requestAnimationFrame(() => {
-        queued = false;
-        render();
-      });
+      readTarget();
+      kick();
     };
     const onResize = () => {
       layout();
-      render();
+      readTarget();
+      current = target;
+      render(current);
     };
-    // A backgrounded tab starves requestAnimationFrame, so a scroll that lands
-    // while hidden leaves `queued` stuck true and every later scroll is
-    // dropped. Clear the latch and catch up whenever we become visible again.
+    // A backgrounded tab starves requestAnimationFrame, which would leave
+    // `running` stuck true and every later scroll ignored. Reset and catch up.
     const onVisibility = () => {
-      if (document.visibilityState !== 'visible') return;
+      if (document.visibilityState !== "visible") return;
       cancelAnimationFrame(raf);
-      queued = false;
+      running = false;
       layout();
-      render();
+      readTarget();
+      current = target;
+      render(current);
     };
 
     layout();
-    render();
+    readTarget();
+    current = target;
+    render(current);
 
     window.addEventListener('scroll', onScroll, { passive: true });
     // If anything ever makes <body> the scroll container, element scroll
@@ -303,7 +375,7 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
       document.removeEventListener('visibilitychange', onVisibility);
       ro.disconnect();
     };
-  }, [sceneCount, beatCount, cards, openingTint, span]);
+  }, [sceneCount, beatCount, cards, ideaRanges, openingTint, span]);
 
   const scrollToScene = useCallback(
     (i) => {
@@ -323,6 +395,7 @@ export function useSequence(sceneCount, beatCount, cards = [], openingTint = 0.3
     videoRefs,
     lineRefs,
     cardRefs,
+    ideaRefs,
     veilRef,
     veilDarkRef,
     cueRef,
