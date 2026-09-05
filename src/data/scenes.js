@@ -3,8 +3,8 @@
  * clauses. Two lines balance under the concept title; a single long
  * sentence wraps ragged and fights it.
  *
- * Order is the order you scroll. `idea` groups them; when the idea changes a
- * CARD announces the new one (see below).
+ * `idea` groups them into the run that opens from that name on the menu;
+ * order within an idea is the order you scroll.
  *
  * Each clip is a baked ping-pong (plays forward, then backward), so it loops
  * without a visible jump. The source clips did not loop on their own.
@@ -58,16 +58,30 @@ export const SCENES = [
     video: '/scenes/06-trace.mp4',
     poster: '/scenes/06-trace.jpg',
   },
+  {
+    id: 'garden',
+    idea: 'EARTH',
+    eyebrow: 'Garden',
+    line: ['A tree grows', 'inside the house.'],
+    video: '/scenes/07-garden.mp4',
+    poster: '/scenes/07-garden.jpg',
+  },
+  {
+    id: 'stone',
+    idea: 'EARTH',
+    eyebrow: 'Stone',
+    line: ['Built into the rock,', 'not on it.'],
+    video: '/scenes/08-stone.mp4',
+    poster: '/scenes/08-stone.jpg',
+  },
+  {
+    id: 'courtyard',
+    idea: 'EARTH',
+    eyebrow: 'Rammed earth',
+    line: ['Walls made', 'of the ground.'],
+    video: '/scenes/09-courtyard.mp4',
+    poster: '/scenes/09-courtyard.jpg',
+  },
 ];
 
-/**
- * Cards announce a new idea mid-run.
- *
- * `at` is a position in scene-space, and it sits on a HALF unit deliberately:
- * that is the midpoint of a crossfade, where two clips are dissolving and no
- * chapter line is up. The break lands in the gap the sequence already has,
- * so no extra scroll has to be invented for it.
- *
- * Idea 01 has no card here — the horizontal opening already delivers it.
- */
 export default SCENES;
