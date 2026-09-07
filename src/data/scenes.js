@@ -90,6 +90,30 @@ export const SCENES = [
     video: '/scenes/10-silence.mp4',
     poster: '/scenes/10-silence.jpg',
   },
+  {
+    id: 'gallery',
+    idea: 'ART',
+    eyebrow: 'Gallery',
+    line: ['Live inside', 'the collection.'],
+    video: '/scenes/11-gallery.mp4',
+    poster: '/scenes/11-gallery.jpg',
+  },
+  {
+    id: 'mural',
+    idea: 'ART',
+    eyebrow: 'Mural',
+    line: ['Walls that', 'speak.'],
+    video: '/scenes/12-mural.mp4',
+    poster: '/scenes/12-mural.jpg',
+  },
+  {
+    id: 'sculpture',
+    idea: 'ART',
+    eyebrow: 'Sculpture',
+    line: ['Art is not hung.', 'It is lived with.'],
+    video: '/scenes/13-sculpture.mp4',
+    poster: '/scenes/13-sculpture.jpg',
+  },
 ];
 
 export default SCENES;
