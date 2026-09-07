@@ -541,6 +541,13 @@ body {
   color: var(--grey);
   pointer-events: none;
   text-shadow: 0 1px 20px rgba(11, 11, 9, 0.9);
+  will-change: opacity;
+}
+
+/* the entrance lives on the inner span so it can never override the
+   scroll-driven fade on the outer one */
+.cue-text {
+  display: inline-block;
   animation: arrive 1.4s var(--ease) 3.1s backwards;
 }
 
@@ -742,11 +749,23 @@ body {
   pointer-events: none;
 }
 
+/* ---------- phones and small tablets ---------- */
 @media (max-width: 820px) {
+  .mast {
+    padding: 1.1rem 1.15rem;
+  }
+  .mast-elephant {
+    height: 2rem;
+  }
+  .mast-idea {
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+  }
   .menu {
     padding: clamp(4rem, 10vh, 6rem) clamp(1.15rem, 5vw, 2rem);
     row-gap: clamp(1.6rem, 5vh, 3rem);
   }
+  /* two to a row, the seventh centred; the names take the width they have */
   .menu-item {
     grid-column: span 12;
   }
@@ -756,9 +775,50 @@ body {
   .menu-item:nth-child(7) {
     grid-column: 7 / span 12;
   }
+  .menu-name {
+    font-size: clamp(1.9rem, min(9vw, 7vh), 3rem);
+  }
+  .concept {
+    font-size: clamp(3rem, min(15vw, 12vh), 5rem);
+  }
   .statement {
     max-width: 24ch;
-    line-height: 2.2;
+    font-size: 0.8rem;
+    line-height: 2.1;
+  }
+  /* thumb-sized targets */
+  .panel-close {
+    top: 3.2rem;
+    padding: 0.9rem 0;
+    font-size: 0.66rem;
+  }
+  .marks {
+    right: 0.9rem;
+  }
+  .collab-title {
+    font-size: clamp(2.2rem, 10.5vw, 3.2rem);
+  }
+  .tab {
+    padding: 0.8rem 0.2rem;
+  }
+}
+
+/* phones held sideways: little height, keep the frames inside it */
+@media (max-height: 460px) {
+  .crest {
+    height: 14vh;
+    margin-bottom: 0.8rem;
+  }
+  .menu {
+    row-gap: 1rem;
+    padding-top: 3.2rem;
+    padding-bottom: 2rem;
+  }
+  .menu-item {
+    gap: 0.25rem;
+  }
+  .statements {
+    display: none;
   }
 }
 
@@ -774,7 +834,7 @@ body {
   .wordmark,
   .wordmark-sub,
   .crest,
-  .cue,
+  .cue-text,
   .panel-cue-text {
     animation: none;
     opacity: 1;

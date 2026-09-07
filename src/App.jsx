@@ -163,7 +163,7 @@ export default function App() {
       </section>
 
       <p className="cue" ref={cueRef} aria-hidden="true">
-        SCROLL
+        <span className="cue-text">SCROLL</span>
       </p>
 
       {/* ---------- an idea, opened ---------- */}
