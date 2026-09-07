@@ -82,6 +82,14 @@ export const SCENES = [
     video: '/scenes/09-courtyard.mp4',
     poster: '/scenes/09-courtyard.jpg',
   },
+  {
+    id: 'silence',
+    idea: 'SILENCE',
+    eyebrow: 'Silence',
+    line: ['Leave the city', 'at the door.'],
+    video: '/scenes/10-silence.mp4',
+    poster: '/scenes/10-silence.jpg',
+  },
 ];
 
 export default SCENES;

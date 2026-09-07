@@ -21,6 +21,7 @@ export default function App() {
     introRef,
     letterRefs,
     subRef,
+    crestRef,
     menuRef,
     collabRef,
     menuItemRefs,
@@ -32,6 +33,7 @@ export default function App() {
     veilRef,
     veilDarkRef,
     cueRef,
+    panelCueRef,
     scrollerRef,
     mode,
     openIdea,
@@ -61,7 +63,10 @@ export default function App() {
       <div className="grain" aria-hidden="true" />
 
       <header className="mast">
-        <span className="mast-mark">PROJECT 49</span>
+        <span className="mast-mark">
+          <img className="mast-elephant" src="/marks/elephant.png" alt="" />
+          PROJECT 49
+        </span>
         <span className={current ? 'mast-idea on' : 'mast-idea'}>
           {current ? `${currentNo} / ${current.name}` : ''}
         </span>
@@ -69,6 +74,7 @@ export default function App() {
 
       {/* ---------- intro: the wordmark ---------- */}
       <div className="intro" ref={introRef}>
+        <img className="crest" ref={crestRef} src="/marks/elephant.png" alt="" />
         <h1 className="wordmark" aria-label="PROJECT 49">
           {'PROJECT 49'.split('').map((ch, k) => (
             <span
@@ -110,9 +116,6 @@ export default function App() {
                 ) : (
                   idea.name
                 )}
-              </span>
-              <span className="menu-count">
-                {can ? `${idea.scenes.length} films` : 'soon'}
               </span>
             </button>
           );
@@ -241,6 +244,11 @@ export default function App() {
             <button type="button" className="panel-close" onClick={close} aria-label="Close">
               CLOSE
             </button>
+
+            {/* fades up after a moment, leaves the instant the page moves */}
+            <div className="panel-cue" ref={panelCueRef} aria-hidden="true">
+              <span className="panel-cue-text">SCROLL</span>
+            </div>
           </>
         )}
       </section>

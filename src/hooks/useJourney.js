@@ -19,6 +19,9 @@ export const PACE = 1.5;
 export const SMOOTH = 0.11;
 export const CROSSFADE = 0.6;
 export const TAIL = 0.55;      // travel past the last chapter before it closes
+// A one-film idea has no chapters to travel between, so it is held for a
+// while before the tail begins: the film gets its ten seconds of scroll.
+export const HOLD_SINGLE = 1.6;
 export const INTRO_SPAN = 2;   // intro -> menu -> collaboration
 
 // the order the wordmark's glyphs leave in — scattered, not a wipe
@@ -47,6 +50,7 @@ export function useJourney(ideas) {
   const introRef = useRef(null);
   const letterRefs = useRef([]);   // the wordmark, one span per glyph
   const subRef = useRef(null);
+  const crestRef = useRef(null);   // the elephant above the wordmark
   const menuRef = useRef(null);
   const collabRef = useRef(null);
   const menuItemRefs = useRef([]);
@@ -58,6 +62,7 @@ export function useJourney(ideas) {
   const veilRef = useRef(null);
   const veilDarkRef = useRef(null);
   const cueRef = useRef(null);
+  const panelCueRef = useRef(null);
   const scrollerRef = useRef(null);
 
   const [mode, setMode] = useState('intro');
@@ -74,10 +79,13 @@ export function useJourney(ideas) {
   const stateRef = useRef({ ideas });
   stateRef.current.ideas = ideas;
 
+  const holdFor = (scenes) => (scenes.length === 1 ? HOLD_SINGLE : 0);
+
   const spanFor = useCallback(() => {
     const i = openRef.current;
     if (i == null) return INTRO_SPAN;
-    return stateRef.current.ideas[i].scenes.length - 1 + TAIL;
+    const scenes = stateRef.current.ideas[i].scenes;
+    return scenes.length - 1 + holdFor(scenes) + TAIL;
   }, []);
 
   const layout = useCallback(() => {
@@ -121,6 +129,15 @@ export function useJourney(ideas) {
         }
         if (subRef.current) {
           subRef.current.style.opacity = String(clamp(1 - t / 0.3, 0, 1));
+        }
+        if (crestRef.current) {
+          // leaves with the first letters, lifting slightly
+          const g = clamp(t / 0.4, 0, 1);
+          crestRef.current.style.opacity = String(1 - g);
+          if (!reduced) {
+            crestRef.current.style.transform =
+              'translate3d(0,' + (-g * 18).toFixed(1) + 'px,0)';
+          }
         }
         const letters = letterRefs.current;
         const n = letters.length;
@@ -181,6 +198,7 @@ export function useJourney(ideas) {
 
       /* ---------- an idea, opened ---------- */
       const scenes = stateRef.current.ideas[openAt].scenes;
+      const end = scenes.length - 1 + holdFor(scenes);   // where the tail starts
       let idx = 0;
       let best = -1;
       let text = 0;
@@ -222,7 +240,7 @@ export function useJourney(ideas) {
         }
 
         if (video && !reduced) {
-          const tc = clamp(t, -1, 1.2);
+          const tc = clamp(t, -1, 1.2 + holdFor(scenes));
           // scale stays ahead of the shift so a moved clip never shows an edge
           video.style.transform =
             'translate3d(0,' + (-tc * 3.5).toFixed(1) + '%,0) scale(' +
@@ -249,7 +267,7 @@ export function useJourney(ideas) {
 
       if (conceptRef.current) {
         // holds for the whole idea, easing off only as it closes
-        const out = clamp((p - (scenes.length - 1)) / TAIL, 0, 1);
+        const out = clamp((p - end) / TAIL, 0, 1);
         conceptRef.current.style.opacity = String(1 - out);
       }
 
@@ -271,7 +289,12 @@ export function useJourney(ideas) {
       }
 
       // scrolled past the end — fold it back up
-      if (p >= scenes.length - 1 + TAIL - 0.02 && !closingRef.current) {
+      if (panelCueRef.current) {
+        // the cue inside an opened idea: gone as soon as the page moves
+        panelCueRef.current.style.opacity = String(1 - clamp(p / 0.12, 0, 1));
+      }
+
+      if (p >= end + TAIL - 0.02 && !closingRef.current) {
         closingRef.current = true;
         window.dispatchEvent(new CustomEvent('p49:close'));
       }
@@ -455,6 +478,7 @@ export function useJourney(ideas) {
     introRef,
     letterRefs,
     subRef,
+    crestRef,
     menuRef,
     collabRef,
     menuItemRefs,
@@ -466,6 +490,7 @@ export function useJourney(ideas) {
     veilRef,
     veilDarkRef,
     cueRef,
+    panelCueRef,
     scrollerRef,
     mode,
     openIdea,

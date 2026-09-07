@@ -169,19 +169,32 @@ body {
   right: 0;
   z-index: 40;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.7rem clamp(1.15rem, 4vw, 3.4rem);
+  padding: 1.4rem clamp(1.15rem, 4vw, 3.4rem);
   pointer-events: none;
   text-shadow: 0 1px 20px rgba(11, 11, 9, 0.85);
 }
 
 .mast-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   font-size: 0.72rem;
   letter-spacing: 0.3em;
   color: var(--ivory);
   font-weight: 500;
+}
+
+/* the elephant, white, at the head of the wordmark. An engraving, so it
+   needs a little more height than a flat mark to keep its hatching. */
+.mast-elephant {
+  display: block;
+  height: 2.4rem;
+  width: auto;
+  flex: none;
+  filter: drop-shadow(0 1px 8px rgba(11, 11, 9, 0.6));
 }
 
 .mast-idea {
@@ -224,6 +237,17 @@ body {
   color: var(--ivory);
   white-space: nowrap;
   animation: track-in 2.2s cubic-bezier(0.16, 0.85, 0.22, 1) 0.55s backwards;
+}
+
+/* the crest: the same elephant above the wordmark, white */
+.crest {
+  display: block;
+  height: clamp(4.5rem, 17vh, 9.5rem);
+  width: auto;
+  margin: 0 0 clamp(1.2rem, 3.2vh, 2.2rem);
+  will-change: opacity, transform;
+  filter: drop-shadow(0 2px 24px rgba(11, 11, 9, 0.7));
+  animation: arrive 1.6s var(--ease) 0.3s backwards;
 }
 
 .wm-l {
@@ -355,15 +379,6 @@ body {
   transform: scale(1.06);
 }
 
-.menu-count {
-  font-size: 0.58rem;
-  letter-spacing: 0.26em;
-  text-indent: 0.26em;
-  text-transform: uppercase;
-  color: var(--grey);
-  white-space: nowrap;
-}
-
 /* ---------- closing frame: the collaboration ---------- */
 .collab {
   position: fixed;
@@ -487,6 +502,30 @@ body {
   text-indent: 0.24em;
   text-transform: uppercase;
   color: var(--grey);
+}
+
+/* ---------- the cue inside an opened idea ---------- */
+.panel-cue {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(1.4rem, 4vh, 2.6rem);
+  z-index: 20;
+  text-align: center;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.panel-cue-text {
+  display: inline-block;
+  font-size: 0.58rem;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: var(--ivory);
+  opacity: 0.55;
+  text-shadow: 0 1px 12px rgba(11, 11, 9, 0.8);
+  /* arrives late, so the film has the first seconds to itself */
+  animation: arrive 1.4s var(--ease) 2.6s backwards;
 }
 
 /* ---------- scroll cue ---------- */
@@ -734,7 +773,9 @@ body {
   }
   .wordmark,
   .wordmark-sub,
-  .cue {
+  .crest,
+  .cue,
+  .panel-cue-text {
     animation: none;
     opacity: 1;
   }
