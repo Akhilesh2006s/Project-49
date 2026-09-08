@@ -7,3 +7,6 @@ dist
 .env.*
 !.env.example
 .claude
+
+# design explorations and generated prompt sheets, not part of the site
+output/

@@ -1,260 +1,28 @@
-import { useMemo, useState } from 'react';
-import SCENES from './data/scenes';
-import { HERO, IDEAS, MARKS } from './data/opening';
-import COLLAB from './data/collab';
-import useJourney from './hooks/useJourney';
-
-export default function App() {
-  // group the chapters by idea, in the order the seven are listed; ideas with
-  // no chapters yet still appear in the menu, just inert
-  const ideas = useMemo(
-    () =>
-      IDEAS.map((name) => ({
-        name,
-        scenes: SCENES.filter((s) => s.idea === name),
-      })),
-    []
-  );
-
-  const {
-    heroRef,
-    introRef,
-    letterRefs,
-    subRef,
-    crestRef,
-    menuRef,
-    collabRef,
-    menuItemRefs,
-    panelRef,
-    layerRefs,
-    videoRefs,
-    conceptRef,
-    lineRefs,
-    veilRef,
-    veilDarkRef,
-    cueRef,
-    panelCueRef,
-    scrollerRef,
-    mode,
-    openIdea,
-    active,
-    open,
-    close,
-  } = useJourney(ideas);
-
-  const [partner, setPartner] = useState(0);
-  const who = COLLAB.partners[partner];
-
-  const current = openIdea != null ? ideas[openIdea] : null;
-  const currentNo = openIdea != null ? String(openIdea + 1).padStart(2, '0') : null;
-
-  return (
-    <>
-      {/* ---------- the hero, behind everything ---------- */}
-      <div className="hero" ref={heroRef} aria-hidden="true">
-        <picture>
-          <source media="(max-width: 900px)" srcSet={HERO.sm} />
-          <img className="hero-img" src={HERO.lg} alt="" decoding="async" fetchpriority="high" />
-        </picture>
-        <div className="hero-sweep" aria-hidden="true" />
-        <div className="hero-bloom" aria-hidden="true" />
-      </div>
-      <div className="hero-shade" aria-hidden="true" />
-      <div className="grain" aria-hidden="true" />
-
-      <header className="mast">
-        <span className="mast-mark">
-          <img className="mast-elephant" src="/marks/elephant.png" alt="" />
-          PROJECT 49
-        </span>
-        <span className={current ? 'mast-idea on' : 'mast-idea'}>
-          {current ? `${currentNo} / ${current.name}` : ''}
-        </span>
-      </header>
-
-      {/* ---------- intro: the wordmark ---------- */}
-      <div className="intro" ref={introRef}>
-        <img className="crest" ref={crestRef} src="/marks/elephant.png" alt="" />
-        <h1 className="wordmark" aria-label="PROJECT 49">
-          {'PROJECT 49'.split('').map((ch, k) => (
-            <span
-              key={k}
-              className={ch === ' ' ? 'wm-l wm-l--space' : 'wm-l'}
-              aria-hidden="true"
-              ref={(el) => {
-                letterRefs.current[k] = el;
-              }}
-            >
-              {ch === ' ' ? ' ' : ch}
-            </span>
-          ))}
-        </h1>
-        <p className="wordmark-sub" ref={subRef}>
-          49 Homes. 7 Ideas. 1 City.
-        </p>
-      </div>
-
-      {/* ---------- menu: the seven, risen ---------- */}
-      <nav className="menu" ref={menuRef} aria-label="The seven ideas">
-        {ideas.map((idea, i) => {
-          const can = idea.scenes.length > 0;
-          return (
-            <button
-              key={idea.name}
-              type="button"
-              className={'menu-item' + (can ? '' : ' menu-item--soon')}
-              ref={(el) => {
-                menuItemRefs.current[i] = el;
-              }}
-              disabled={!can}
-              onClick={() => can && open(i)}
-            >
-              <span className="menu-no">{String(i + 1).padStart(2, '0')}</span>
-              <span className="menu-name">
-                {MARKS[idea.name] ? (
-                  <img className="menu-mark" src={MARKS[idea.name]} alt={idea.name} />
-                ) : (
-                  idea.name
-                )}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* ---------- closing frame: the collaboration ---------- */}
-      <section className="collab" ref={collabRef} aria-label="Collaboration">
-        <p className="collab-eyebrow">{COLLAB.eyebrow}</p>
-        <h2 className="collab-title">
-          {COLLAB.partners.map((pt, i) => (
-            <span key={pt.id}>
-              {i > 0 && <span className="collab-x">{'\u00d7'}</span>}
-              <span className="collab-name">{pt.name}</span>
-            </span>
-          ))}
-        </h2>
-
-        <div className="tabs" role="tablist" aria-label="Our experience">
-          {COLLAB.partners.map((pt, i) => (
-            <button
-              key={pt.id}
-              type="button"
-              role="tab"
-              aria-selected={i === partner}
-              className={'tab' + (i === partner ? ' on' : '')}
-              onClick={() => setPartner(i)}
-            >
-              {pt.name}
-            </button>
-          ))}
-        </div>
-
-        <div className="exp" role="tabpanel" key={who.id}>
-          <p className="exp-role">{who.role}</p>
-          <ul className="exp-list">
-            {who.experience.map((e, i) => (
-              <li className="exp-item" key={i}>
-                <span className="exp-title">{e.title}</span>
-                <span className="exp-meta">{e.meta}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <p className="cue" ref={cueRef} aria-hidden="true">
-        <span className="cue-text">SCROLL</span>
-      </p>
-
-      {/* ---------- an idea, opened ---------- */}
-      <section
-        className={'panel' + (current ? ' panel--open' : '')}
-        ref={panelRef}
-        aria-hidden={current ? 'false' : 'true'}
-      >
-        {current && (
-          <>
-            <div className="stage" aria-hidden="true">
-              {current.scenes.map((s, i) => (
-                <div
-                  key={s.id}
-                  className="layer"
-                  ref={(el) => {
-                    layerRefs.current[i] = el;
-                  }}
-                >
-                  <video
-                    className="layer-video"
-                    ref={(el) => {
-                      videoRefs.current[i] = el;
-                    }}
-                    src={s.video}
-                    poster={s.poster}
-                    muted
-                    loop
-                    playsInline
-                    preload={i === 0 ? 'auto' : 'metadata'}
-                    onCanPlay={() => window.dispatchEvent(new Event('scroll'))}
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="veil" ref={veilRef} aria-hidden="true" />
-            <div className="veil-dark" ref={veilDarkRef} aria-hidden="true" />
-
-            <div className="concepts" aria-hidden="true">
-              <h2 className="concept" ref={conceptRef}>
-                {MARKS[current.name] ? (
-                  <img className="concept-mark" src={MARKS[current.name]} alt="" />
-                ) : (
-                  current.name
-                )}
-              </h2>
-            </div>
-
-            <div className="statements">
-              {current.scenes.map((s, i) => (
-                <p
-                  key={s.id}
-                  className="statement"
-                  ref={(el) => {
-                    lineRefs.current[i] = el;
-                  }}
-                >
-                  {s.line.map((part, k) => (
-                    <span className="statement-row" key={k}>
-                      {part}
-                    </span>
-                  ))}
-                </p>
-              ))}
-            </div>
-
-            <nav className="marks" aria-label="Chapters">
-              {current.scenes.map((s, i) => (
-                <span
-                  key={s.id}
-                  className={i === active ? 'mark on' : 'mark'}
-                  aria-label={s.eyebrow}
-                />
-              ))}
-            </nav>
-
-            <button type="button" className="panel-close" onClick={close} aria-label="Close">
-              CLOSE
-            </button>
-
-            {/* fades up after a moment, leaves the instant the page moves */}
-            <div className="panel-cue" ref={panelCueRef} aria-hidden="true">
-              <span className="panel-cue-text">SCROLL</span>
-            </div>
-          </>
-        )}
-      </section>
-
-      {/* the only element in flow: its height is what there is to scroll */}
-      <div className="scroller" ref={scrollerRef} />
-    </>
-  );
+import { useEffect, useRef, useState } from 'react';
+import chapters from './data/chapters';
+import { Soundscape } from './sound';
+import IdeaPreview from './IdeaPreview';
+function Film({scene,paused,onProgress,onEnd}){const ref=useRef(null);useEffect(()=>{const v=ref.current;if(v){if(paused)v.pause();else v.play().catch(()=>{});}},[paused,scene]);return <div className="film-frame" key={scene.id}><img src={scene.poster} alt=""/>{scene.video&&<video ref={ref} src={scene.video} poster={scene.poster} muted playsInline preload="auto" onTimeUpdate={e=>onProgress(e.target.currentTime/e.target.duration||0)} onEnded={e=>{e.target.currentTime=0;if(!paused)e.target.play().catch(()=>{});onEnd();}}/>}</div>;}
+export default function App(){
+ const [hover,setHover]=useState(0),[opened,setOpened]=useState(null),[frame,setFrame]=useState(0),[sound,setSound]=useState(false),[volume,setVolume]=useState(.5),[paused,setPaused]=useState(false),[progress,setProgress]=useState(0),[visited,setVisited]=useState([]);
+ const engine=useRef(null),trigger=useRef(null),closeRef=useRef(null);const chapter=opened===null?null:chapters[opened],scene=chapter?.scenes[frame];
+ useEffect(()=>{engine.current=new Soundscape();return()=>engine.current.dispose();},[]);
+ useEffect(()=>{if(sound)engine.current.scene(chapter?.id||'LIGHT',scene?.id||'');},[sound,chapter,scene]);
+ const enable=async()=>{try{await engine.current.start();engine.current.volume(volume);engine.current.scene(chapter?.id||'LIGHT');setSound(true);}catch{setSound(false);}};
+ const toggleSound=()=>{if(sound){engine.current.suspend();setSound(false);}else enable();};
+ const enter=i=>{if(opened===null)trigger.current=document.activeElement;setFrame(0);setProgress(0);setPaused(window.matchMedia('(prefers-reduced-motion: reduce)').matches);setOpened(i);setVisited(v=>[...new Set([...v,i])]);if(sound){engine.current.start();engine.current.scene(chapters[i].id);}};
+ const leave=()=>{setOpened(null);if(sound){engine.current.start();engine.current.scene('LIGHT');}requestAnimationFrame(()=>trigger.current?.focus());};
+ const advance=()=>{setProgress(0);setFrame(n=>(n+1)%chapter.scenes.length);if(sound&&chapter.id==='SILENCE')engine.current.scene('SILENCE');};
+ useEffect(()=>{if(!chapter)return;document.body.style.overflow='hidden';closeRef.current?.focus();return()=>{document.body.style.overflow='';};},[opened]);
+ useEffect(()=>{if(!chapter)return;const key=e=>{if(e.key==='Escape')leave();if(e.key==='ArrowRight')advance();if(e.key==='ArrowLeft'){setProgress(0);setFrame(n=>(n-1+chapter.scenes.length)%chapter.scenes.length);}if(e.key==='Tab'){const els=[...document.querySelectorAll('.experience button,.experience input')],first=els[0],last=els.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}};window.addEventListener('keydown',key);return()=>window.removeEventListener('keydown',key);},[opened,frame,sound]);
+ useEffect(()=>{if(!scene||scene.video||paused)return;const start=Date.now(),timer=setInterval(()=>{const p=(Date.now()-start)/10000;setProgress(p);if(p>=1){clearInterval(timer);advance();}},100);return()=>clearInterval(timer);},[scene,paused]);
+ useEffect(()=>{const visibility=()=>{if(document.hidden)engine.current.suspend();else if(sound&&!paused)engine.current.start();};document.addEventListener('visibilitychange',visibility);return()=>document.removeEventListener('visibilitychange',visibility);},[sound,paused]);
+ const pause=()=>{setPaused(!paused);if(sound){if(!paused)engine.current.suspend();else engine.current.start();}};
+ return <><div className="site-shell" inert={chapter?'':undefined}>
+ <header className="masthead"><a className="brand" href="#home"><img src="/marks/elephant.png" alt=""/><span>PROJECT 49</span></a><nav><a href="#ideas">The seven ideas ↗</a><a href="#collaboration">The collaboration</a></nav><button className={'sound-toggle '+(sound?'is-on':'')} onClick={toggleSound} aria-pressed={sound}><span className="equalizer"><i/><i/><i/><i/></span>Sound {sound?'on':'off'}</button></header>
+ <main><section className="opening" id="home"><img className="opening-image" src="/opening/hero.jpg" alt="Sunlight across a carved stone entrance and planted courtyard" fetchpriority="high"/><div className="opening-shade"/><div className="opening-top"><span>A considered way of living</span><span>Hyderabad, India</span></div><div className="opening-copy"><p className="eyebrow">49 homes. 7 ideas. 1 city.</p><h1>A home.<br/>A whole <em>world.</em></h1><p className="opening-description">Shaped by light. Moved by air.<br/>Connected to everything that matters.</p><a className="enter-link" href="#ideas">Discover the seven ideas <span>↗</span></a></div><div className="opening-bottom"><span>Architecture, felt.</span><a href="#ideas">Scroll to discover ↓</a><span>01 — 07</span></div></section>
+ <section className="ideas-section" id="ideas"><div className="section-heading"><p className="eyebrow">The philosophy / Project 49</p><h2>Seven ideas.<br/><em>One way to feel at home.</em></h2><p>Enter an idea. Stay a little.<br/>Let the home reveal itself.</p></div><div className="ideas-composition"><div className="idea-preview"><IdeaPreview chapter={chapters[hover]} hidden={opened!==null}/><div className="preview-shade"/><span className="preview-number">{chapters[hover].number}</span><div className="preview-caption"><p>{chapters[hover].tags}</p><h3>{chapters[hover].title}</h3><button onClick={()=>enter(hover)}>Enter {chapters[hover].id.toLowerCase()} <span>↗</span></button></div></div><div className="idea-list">{chapters.map((c,i)=><button key={c.id} className={'idea-row '+(hover===i?'selected':'')} onMouseEnter={()=>setHover(i)} onFocus={()=>setHover(i)} onClick={()=>enter(i)}><span className="idea-number">{c.number}</span><span className="idea-name">{c.id.toLowerCase()}</span><span className="idea-detail">{c.title}</span><span className="idea-arrow">{visited.includes(i)?'◦':'↗'}</span></button>)}<p className="list-note">◦ Seven ideas in motion. Best experienced with sound.</p></div></div></section>
+ <section className="manifesto"><p className="eyebrow">The spaces between</p><h2>Not just where you live.<br/><em>How you feel alive.</em></h2><p>The passage of sunlight. The comfort of familiar materials.<br/>The quiet pleasure of a home that understands you.</p><button className="enter-link" onClick={()=>enter(0)}>Begin with light <span>↗</span></button></section></main>
+ <footer id="collaboration"><p className="eyebrow">In collaboration</p><h2>Ayra <em>×</em> Anxa</h2><p>Architecture & digital experience.</p><div className="footer-end"><span>PROJECT 49 · HYDERABAD</span><a href="#home">Back to the beginning ↑</a></div></footer></div>
+ {chapter&&<section className={'experience theme-'+chapter.id.toLowerCase()} role="dialog" aria-modal="true" aria-label={`${chapter.id} film experience`}><Film scene={scene} paused={paused} onProgress={setProgress} onEnd={advance}/><div className="cinema-shade"/><div className="cinema-header"><span>PROJECT 49 <b>/ {chapter.number} — {chapter.id}</b></span><button ref={closeRef} onClick={leave} aria-label="Close film and return to seven ideas">All ideas <span>×</span></button></div><div className="chapter-entry" key={chapter.id} aria-hidden="true"><span>{chapter.number} / Seven ideas</span><strong>{chapter.id.toLowerCase()}</strong><em>{chapter.title}</em></div><div className="cinema-copy" key={`${chapter.id}-${frame}`}><p className="eyebrow">{chapter.id} / {scene.eyebrow}</p><h2>{scene.line[0]}<br/><em>{scene.line[1]}</em></h2><p className="chapter-description">{chapter.description}</p></div>{!sound&&<button className="sound-invite" onClick={enable}>◉ Hear this space <span>Enable sound</span></button>}<div className="cinema-bottom"><div className="scene-selector">{chapter.scenes.map((s,i)=><button key={s.id} aria-label={`Play ${s.eyebrow}`} aria-current={frame===i?'step':undefined} onClick={()=>{setFrame(i);setProgress(0);}}><span className="track"><i style={{width:frame===i?`${progress*100}%`:frame>i?'100%':'0%'}}/></span><span>{String(i+1).padStart(2,'0')} <b>{s.eyebrow}</b></span></button>)}</div><div className="playback"><button onClick={pause} aria-label={paused?'Play film':'Pause film'}>{paused?'Play ▷':'Pause Ⅱ'}</button><button onClick={toggleSound} aria-pressed={sound}>Sound {sound?'on':'off'}</button>{sound&&<input type="range" aria-label="Sound volume" min="0" max="1" step=".05" value={volume} onChange={e=>{setVolume(+e.target.value);engine.current.volume(+e.target.value);}}/>}<button className="next-idea" onClick={()=>enter((opened+1)%7)}>Next: {chapters[(opened+1)%7].id.toLowerCase()} ↗</button></div></div></section>}</>;
 }

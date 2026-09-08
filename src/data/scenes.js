@@ -114,6 +114,22 @@ export const SCENES = [
     video: '/scenes/13-sculpture.mp4',
     poster: '/scenes/13-sculpture.jpg',
   },
+  {
+    id: 'grown',
+    idea: 'FUTURE',
+    eyebrow: 'Grown',
+    line: ['The kitchen', 'grows its own.'],
+    video: '/scenes/14-grown.mp4',
+    poster: '/scenes/14-grown.jpg',
+  },
+  {
+    id: 'screen',
+    idea: 'FUTURE',
+    eyebrow: 'Quiet technology',
+    line: ['Technology that', 'disappears.'],
+    video: '/scenes/15-screen.mp4',
+    poster: '/scenes/15-screen.jpg',
+  },
 ];
 
 export default SCENES;
