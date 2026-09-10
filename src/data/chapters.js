@@ -9,6 +9,6 @@ const definitions = [
 ['FUTURE','A home that responds.','Food growing within reach. Technology integrated into the room. Thoughtful automation that makes daily life feel effortless.','Intelligence / Adaptation / Ease'],
 ];
 export default definitions.map(([id,title,description,tags],i)=>({id,title,description,tags,number:String(i+1).padStart(2,'0'),scenes:id==='ROOTS'?[
-{id:'root-entrance',poster:'/opening/hero.jpg',eyebrow:'Belonging',line:['A home that','remembers its place.']},
-{...scenes.find(s=>s.id==='courtyard'),id:'root-material',eyebrow:'Material memory',line:['Local materials.','Lasting connections.']}
+{id:'root-entrance',video:'/scenes/17-root-entrance-clean.mp4',poster:'/scenes/17-root-entrance.jpg',eyebrow:'Belonging',line:['A home that','remembers its place.']},
+{id:'root-material',video:'/scenes/18-root-material-clean.mp4',poster:'/scenes/18-root-material.jpg',eyebrow:'Material memory',line:['Local materials.','Lasting connections.']}
 ]:scenes.filter(s=>s.idea===id)}));
