@@ -15,7 +15,7 @@ export const SCENES = [
     idea: 'LIGHT',
     eyebrow: 'Gradient',
     line: ['Light paints', 'your walls.'],
-    video: '/scenes/01-gradient.mp4',
+    video: '/scenes/01-gradient-clean.mp4',
     poster: '/scenes/01-gradient.jpg',
   },
   {
@@ -23,7 +23,7 @@ export const SCENES = [
     idea: 'LIGHT',
     eyebrow: 'Hour',
     line: ['Through the day,', 'the house changes.'],
-    video: '/scenes/02-day.mp4',
+    video: '/scenes/02-day-clean.mp4',
     poster: '/scenes/02-day.jpg',
   },
   {
@@ -31,7 +31,7 @@ export const SCENES = [
     idea: 'LIGHT',
     eyebrow: 'Shadow',
     line: ['Let the shadows', 'speak.'],
-    video: '/scenes/03-shadow.mp4',
+    video: '/scenes/03-shadow-clean.mp4',
     poster: '/scenes/03-shadow.jpg',
   },
   {
@@ -39,7 +39,7 @@ export const SCENES = [
     idea: 'AIR',
     eyebrow: 'Wind',
     line: ['The air is', 'never still.'],
-    video: '/scenes/04-wind.mp4',
+    video: '/scenes/04-wind-clean.mp4',
     poster: '/scenes/04-wind.jpg',
   },
   {
@@ -47,7 +47,7 @@ export const SCENES = [
     idea: 'AIR',
     eyebrow: 'Breath',
     line: ['Let the house', 'breathe.'],
-    video: '/scenes/05-breath.mp4',
+    video: '/scenes/05-breath-clean.mp4',
     poster: '/scenes/05-breath.jpg',
   },
   {
@@ -55,7 +55,7 @@ export const SCENES = [
     idea: 'AIR',
     eyebrow: 'Trace',
     line: ['Nothing to see.', 'Everything to feel.'],
-    video: '/scenes/06-trace.mp4',
+    video: '/scenes/06-trace-clean.mp4',
     poster: '/scenes/06-trace.jpg',
   },
   {
@@ -63,7 +63,7 @@ export const SCENES = [
     idea: 'EARTH',
     eyebrow: 'Garden',
     line: ['A tree grows', 'inside the house.'],
-    video: '/scenes/07-garden.mp4',
+    video: '/scenes/07-garden-clean.mp4',
     poster: '/scenes/07-garden.jpg',
   },
   {
@@ -71,7 +71,7 @@ export const SCENES = [
     idea: 'EARTH',
     eyebrow: 'Stone',
     line: ['Built into the rock,', 'not on it.'],
-    video: '/scenes/08-stone.mp4',
+    video: '/scenes/08-stone-clean.mp4',
     poster: '/scenes/08-stone.jpg',
   },
   {
@@ -79,7 +79,7 @@ export const SCENES = [
     idea: 'EARTH',
     eyebrow: 'Rammed earth',
     line: ['Walls made', 'of the ground.'],
-    video: '/scenes/09-courtyard.mp4',
+    video: '/scenes/09-courtyard-clean.mp4',
     poster: '/scenes/09-courtyard.jpg',
   },
   {
@@ -87,7 +87,7 @@ export const SCENES = [
     idea: 'SILENCE',
     eyebrow: 'Silence',
     line: ['Leave the city', 'at the door.'],
-    video: '/scenes/10-silence.mp4',
+    video: '/scenes/10-silence-clean.mp4',
     poster: '/scenes/10-silence.jpg',
   },
   {
@@ -95,7 +95,7 @@ export const SCENES = [
     idea: 'ART',
     eyebrow: 'Gallery',
     line: ['Live inside', 'the collection.'],
-    video: '/scenes/11-gallery.mp4',
+    video: '/scenes/11-gallery-clean.mp4',
     poster: '/scenes/11-gallery.jpg',
   },
   {
@@ -103,7 +103,7 @@ export const SCENES = [
     idea: 'ART',
     eyebrow: 'Mural',
     line: ['Walls that', 'speak.'],
-    video: '/scenes/12-mural.mp4',
+    video: '/scenes/12-mural-clean.mp4',
     poster: '/scenes/12-mural.jpg',
   },
   {
@@ -111,7 +111,7 @@ export const SCENES = [
     idea: 'ART',
     eyebrow: 'Sculpture',
     line: ['Art is not hung.', 'It is lived with.'],
-    video: '/scenes/13-sculpture.mp4',
+    video: '/scenes/13-sculpture-clean.mp4',
     poster: '/scenes/13-sculpture.jpg',
   },
   {
@@ -119,7 +119,7 @@ export const SCENES = [
     idea: 'FUTURE',
     eyebrow: 'Grown',
     line: ['The kitchen', 'grows its own.'],
-    video: '/scenes/14-grown.mp4',
+    video: '/scenes/14-grown-clean.mp4',
     poster: '/scenes/14-grown.jpg',
   },
   {
@@ -127,7 +127,7 @@ export const SCENES = [
     idea: 'FUTURE',
     eyebrow: 'Quiet technology',
     line: ['Technology that', 'disappears.'],
-    video: '/scenes/15-screen.mp4',
+    video: '/scenes/15-screen-clean.mp4',
     poster: '/scenes/15-screen.jpg',
   },
 ];
