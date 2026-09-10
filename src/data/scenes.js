@@ -123,12 +123,20 @@ export const SCENES = [
     poster: '/scenes/14-grown.jpg',
   },
   {
-    id: 'screen',
+    id: 'smart-glass',
+    idea: 'FUTURE',
+    eyebrow: 'Adaptive privacy',
+    line: ['The view stays.', 'Privacy appears.'],
+    video: '/scenes/15-smart-glass-clean.mp4',
+    poster: '/scenes/15-smart-glass.jpg',
+  },
+  {
+    id: 'ceiling-tv',
     idea: 'FUTURE',
     eyebrow: 'Quiet technology',
-    line: ['Technology that', 'disappears.'],
-    video: '/scenes/15-screen-clean.mp4',
-    poster: '/scenes/15-screen.jpg',
+    line: ['Technology appears', 'only when invited.'],
+    video: '/scenes/16-ceiling-tv-clean.mp4',
+    poster: '/scenes/16-ceiling-tv.jpg',
   },
 ];
 
