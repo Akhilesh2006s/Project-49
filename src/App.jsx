@@ -7,7 +7,7 @@ import IdeaPreview from './IdeaPreview';
 import Cinema from './Cinema';
 
 const PROCESS = [
-  ['01', 'Listen', 'One family, one brief. How you wake, cook, work, gather and rest — before a single line is drawn.'],
+  ['01', 'Listen', 'One family, one brief. How you wake, cook, work, gather and rest come first, before a single line is drawn.'],
   ['02', 'Draw', 'The house is designed under one of the seven ideas. Orientation, openings, courtyards and material follow from it.'],
   ['03', 'Build', 'We build it ourselves, in Hyderabad, with the craftspeople and materials of the Deccan. Stone, earth, timber, lime.'],
   ['04', 'Hand over', 'You receive a finished house, not a shell. Then we go and design the next one, differently.'],
@@ -84,7 +84,7 @@ function Equation() {
         <p className="eyebrow">What Project 49 is</p>
         <h2>The idea repeats.<br /><em>The house never does.</em></h2>
         <p>
-          Each of the seven ideas — light, air, art, roots, earth, silence, future — is a brief. Under
+          Light, air, art, roots, earth, silence and future. Each is a brief. Under
           every brief we design seven houses, each for a different family, on a different plot, with a
           different answer. Forty-nine houses. Not a gated community of copies; a body of work, built in one city.
         </p>
@@ -98,7 +98,7 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
   return (
     <section className="ideas-section" id="ideas">
       <div className="section-heading" data-reveal>
-        <p className="eyebrow">01 — The seven ideas</p>
+        <p className="eyebrow">01 / The seven ideas</p>
         <h2>Seven ways <em>a house can think.</em></h2>
         <p>Every house under an idea is planned, built and lived in around it. Open one to walk through its films.</p>
       </div>
@@ -136,7 +136,7 @@ function FortyNine({ enter }) {
   return (
     <section className="houses" id="houses">
       <div className="section-heading" data-reveal>
-        <p className="eyebrow">02 — The forty-nine</p>
+        <p className="eyebrow">02 / The forty-nine</p>
         <h2>One grid. <em>Forty-nine answers.</em></h2>
         <p>
           Seven rows, one for each idea. Seven houses in every row. The grid fills as houses are designed,
@@ -178,7 +178,7 @@ function Process() {
   return (
     <section className="process" id="build">
       <div className="section-heading" data-reveal>
-        <p className="eyebrow">03 — How we build</p>
+        <p className="eyebrow">03 / How we build</p>
         <h2 className="two-lines"><span>We are not building you a house.</span><br /><em>We are building where you belong.</em></h2>
         <p>A house is walls. A home is the years inside them. We design and build each one ourselves, for one family, so that it fits the life that will be lived in it.</p>
       </div>
@@ -201,12 +201,30 @@ function Process() {
 }
 
 function Place() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !reduced.matches) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    }, { threshold: .3 });
+    observer.observe(video);
+    return () => { observer.disconnect(); video.pause(); };
+  }, []);
+
   return (
     <section className="place" id="city">
-      <img src="/scenes/10-silence.jpg" alt="Hyderabad at night, seen from above" loading="lazy" />
+      <video ref={videoRef} src="/city-hyderabad-clean.mp4" poster="/city-hyderabad.jpg" muted playsInline preload="metadata" aria-hidden="true" />
       <div className="place-shade" />
       <div className="place-copy" data-reveal>
-        <p className="eyebrow">04 — One city</p>
+        <p className="eyebrow">04 / One city</p>
         <h2>Built in Hyderabad,<br /><em>in the language of the Deccan.</em></h2>
         <p>
           Granite that has sat here for two billion years. Courtyards that have cooled houses for centuries.
@@ -237,7 +255,7 @@ function Conversation() {
       setBusy(false);
     } else {
       const body = `Name: ${data.name}\nPhone / email: ${data.reach}\nIdea: ${data.idea}\n\n${data.message}`;
-      location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Project 49 — a private conversation')}&body=${encodeURIComponent(body)}`;
+      location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Project 49: a private conversation')}&body=${encodeURIComponent(body)}`;
       setSent(true);
     }
   };
@@ -267,7 +285,7 @@ function Conversation() {
               <label>An idea that stayed with you
                 <select name="idea" defaultValue="">
                   <option value="">Not sure yet</option>
-                  {chapters.map(c => <option key={c.id} value={c.id}>{c.id.toLowerCase()} — {c.title}</option>)}
+                  {chapters.map(c => <option key={c.id} value={c.id}>{c.id.toLowerCase()}: {c.title}</option>)}
                 </select>
               </label>
               <label>Anything you would like us to know<textarea name="message" rows="4" /></label>
@@ -275,7 +293,24 @@ function Conversation() {
             </form>
           )
         ) : (
-          <p className="pending">The details for this conversation are being finalised. Until then, the films above say most of what we would.</p>
+          <div className="conversation-brief" aria-label="What to bring to the first conversation">
+            <p className="conversation-brief-kicker">Bring us the beginning.</p>
+            <ol>
+              <li>
+                <span>01</span>
+                <div><strong>The ground</strong><p>The plot, neighbourhood, light and trees already there.</p></div>
+              </li>
+              <li>
+                <span>02</span>
+                <div><strong>Your life</strong><p>Who the house is for, and how your days actually move.</p></div>
+              </li>
+              <li>
+                <span>03</span>
+                <div><strong>One feeling</strong><p>What you want to return to: light, air, art, roots, earth, silence or future.</p></div>
+              </li>
+            </ol>
+            <p className="conversation-brief-close">No presentation required. A clear beginning is enough.</p>
+          </div>
         )}
       </div>
     </section>

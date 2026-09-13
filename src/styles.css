@@ -160,7 +160,7 @@ h1 em { color: var(--gold) }
 
 /* ---------- place ---------- */
 .place { position: relative; min-height: 88svh; display: flex; align-items: center; overflow: hidden; background: var(--ink) }
-.place > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .85 }
+.place > img, .place > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .85 }
 .place-shade { position: absolute; inset: 0; background: linear-gradient(90deg, #080e0cee 0%, #080e0c99 45%, #080e0c33 100%), linear-gradient(0deg, #080e0c, transparent 30%) }
 .place-copy { position: relative; padding: clamp(90px, 12vw, 160px) var(--gutter); max-width: 860px }
 .place-copy h2 { font: 300 clamp(40px, 5vw, 80px)/1.02 var(--serif); letter-spacing: -.035em; margin: 26px 0 30px }
@@ -181,6 +181,14 @@ h1 em { color: var(--gold) }
 .conversation-form .enter-link { justify-self: start; margin-top: 8px }
 .conversation-form .enter-link:disabled { opacity: .5; cursor: wait }
 .sent, .pending { font: 300 clamp(22px, 2vw, 28px)/1.4 var(--serif); color: #cfd3c8; border-left: 1px solid var(--gold); padding-left: 24px }
+.conversation-brief { border-top: 1px solid #ffffff3a; color: #d9ddd4 }
+.conversation-brief-kicker { font: italic 300 clamp(24px, 2.2vw, 34px)/1.2 var(--serif); color: var(--gold); padding: 20px 0 24px }
+.conversation-brief ol { list-style: none; margin: 0; padding: 0 }
+.conversation-brief li { display: grid; grid-template-columns: 42px 1fr; gap: 18px; padding: 20px 0; border-top: 1px solid #ffffff24 }
+.conversation-brief li > span { padding-top: 4px; font-size: 10px; letter-spacing: .16em; color: #888f82 }
+.conversation-brief strong { display: block; font: 300 clamp(22px, 1.8vw, 28px)/1.1 var(--serif); color: #f0eadf; margin-bottom: 7px }
+.conversation-brief li p { max-width: 430px; font-size: 13px; line-height: 1.65; color: #aeb5a9 }
+.conversation-brief-close { border-top: 1px solid #ffffff3a; padding-top: 20px; font-size: 11px; line-height: 1.6; letter-spacing: .12em; text-transform: uppercase; color: #aeb5a9 }
 
 /* ---------- footer ---------- */
 footer { padding: clamp(60px, 7vw, 100px) var(--gutter) 28px; background: var(--moss) }

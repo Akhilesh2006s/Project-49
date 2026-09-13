@@ -40,7 +40,7 @@ export default function Cinema({ chapter, scene, frame, opened, paused, progress
       <Film scene={scene} paused={paused} onProgress={onProgress} onEnd={onAdvance} />
       <div className="cinema-shade" />
       <div className="cinema-header">
-        <span>PROJECT 49 <b>/ {chapter.number} — {chapter.id}</b></span>
+        <span>PROJECT 49 <b>/ {chapter.number} / {chapter.id}</b></span>
         <button ref={closeRef} onClick={onLeave} aria-label="Close film and return to the seven ideas">All ideas <span>×</span></button>
       </div>
       <div className="chapter-entry" key={chapter.id} aria-hidden="true">

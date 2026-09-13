@@ -1,5 +1,5 @@
 /**
- * A private conversation — the quiet way in.
+ * A private conversation: the quiet way in.
  *
  * The section is shown when `enabled` is true. The form itself appears once
  * there is somewhere for it to go: an `endpoint` (a form service such as
@@ -15,7 +15,7 @@ export const CONTACT = {
   enabled: true,
   eyebrow: 'A private conversation',
   line: 'If one of these houses could be yours, we would be glad to talk.',
-  note: 'We answer personally, usually within a day. No brochures, no calls you did not ask for.',
+  note: 'The first conversation is about the life the house must hold, before it is about area, style or finish.',
   name: '',
   email: '',
   endpoint: '',
