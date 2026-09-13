@@ -10,3 +10,12 @@ dist
 
 # design explorations and generated prompt sheets, not part of the site
 output/
+
+# autonomous marketing runtime state (source and brand documents are versioned)
+command-center/.venv/
+command-center/config/.env
+command-center/db/*.db
+command-center/db/*.db-journal
+command-center/logs/
+command-center/assets/work/
+command-center/.runner.lock
