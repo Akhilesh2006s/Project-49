@@ -89,7 +89,7 @@ function Opening() {
       <div className="opening-bottom">
         <span>A finite collection · Hyderabad</span>
         <a href="#gap">Scroll <i>↓</i></a>
-        <span>No 50th</span>
+        <span>The complete collection</span>
       </div>
     </section>
   );
@@ -101,7 +101,7 @@ function Gap() {
       <div className="gap-grid">
         <div data-reveal>
           <p className="eyebrow">01 / The proposition</p>
-          <h2>We are not building 49 houses.<br /><em>We are accepting 49 private commissions.</em></h2>
+          <h2>Not forty-nine versions of one house.<br /><em>Forty-nine private architectural commissions.</em></h2>
         </div>
         <div className="gap-copy" data-reveal>
           <p>
@@ -110,9 +110,9 @@ function Gap() {
           </p>
           <p>
             Forty-nine is the complete body of work: seven architectural ideas explored through seven private
-            commissions each. When the forty-ninth commission is accepted, the collection closes.
+            commissions each. The limit is part of the idea, giving every place in the collection lasting meaning.
           </p>
-          <p className="gap-answer">There will be no 50th.</p>
+          <p className="gap-answer">The collection is complete at forty-nine.</p>
         </div>
       </div>
     </section>
@@ -127,7 +127,7 @@ function Commission() {
       <div className="commission-number" data-reveal>01 <span>way of living</span></div>
       <div className="commission-copy" data-reveal>
         <p className="eyebrow">02 / What is a commission?</p>
-        <h2>One life.<br /><em>One architectural response.</em></h2>
+        <h2>One family. One site.<br /><em>One architectural response.</em></h2>
         <p>No catalogue. No standard plan. No repeated house. A commission is a direct relationship between a family, its land and the architects responsible for giving both a distinct form.</p>
       </div>
     </section>
@@ -149,10 +149,11 @@ function Equation() {
       </div>
       <div className="equation-copy" data-reveal>
         <p className="eyebrow">03 / Why 49?</p>
-        <h2>We chose the end<br /><em>before we began.</em></h2>
+        <h2>The limit gives the collection<br /><em>its meaning.</em></h2>
         <p>
           Project 49 is intentionally limited. Seven private commissions will explore each architectural idea.
-          When the forty-ninth commission is accepted, Project 49 closes. The philosophy may repeat. The architecture never does.
+          The collection is defined before it begins: seven private commissions explore each of seven architectural ideas.
+          Each place is used once. The philosophy may repeat. The architecture never does.
         </p>
       </div>
     </section>
@@ -208,7 +209,7 @@ function FortyNine({ enter }) {
     <section className="houses" id="houses">
       <div className="section-heading" data-reveal>
         <p className="eyebrow">05 / The collection</p>
-        <h2>Forty-nine private commissions.<br /><em>Each identity used once.</em></h2>
+        <h2>Forty-nine identities.<br /><em>Each used once.</em></h2>
         <p>
           Seven commissions sit under each of seven ideas. Each receives a permanent identity such as LIGHT 01 or
           EARTH 04, and its status is carried into the architectural record.
@@ -424,7 +425,7 @@ function Finality() {
       <p className="eyebrow" data-reveal>11 / The finite collection</p>
       <div className="finality-count" data-reveal>{COLLECTION_STATUS === 'CLOSED' ? '49 / 49' : '49'}</div>
       <p className="finality-label" data-reveal>{COLLECTION_STATUS === 'CLOSED' ? 'The collection is complete.' : 'Private architectural commissions.'}</p>
-      <h2 data-reveal>{COLLECTION_STATUS === 'CLOSED' ? 'The collection is closed.' : 'The final one closes the collection.'}<br /><em>No 50th.</em></h2>
+      <h2 data-reveal>{COLLECTION_STATUS === 'CLOSED' ? 'The collection is complete.' : 'A finite body of architecture.'}<br /><em>Every commission entirely its own.</em></h2>
     </section>
   );
 }
