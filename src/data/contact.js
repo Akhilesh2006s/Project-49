@@ -13,9 +13,9 @@
  */
 export const CONTACT = {
   enabled: true,
-  eyebrow: 'A private conversation',
-  line: 'If one of these houses could be yours, we would be glad to talk.',
-  note: 'The first conversation is about the life the house must hold, before it is about area, style or finish.',
+  eyebrow: 'A private commission',
+  line: 'Begin a private commission.',
+  note: 'Tell us about your land, your family and the life you want the architecture to hold. Every enquiry is considered personally.',
   name: '',
   email: '',
   endpoint: '',

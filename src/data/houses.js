@@ -1,18 +1,17 @@
 /**
- * The forty-nine. Seven ideas, seven houses under each: 7 × 7 = 49.
+ * The forty-nine commissions. Seven ideas, seven commissions under each: 7 × 7 = 49.
  *
- * Every house is generated here with a default status. To change one,
- * add an override keyed by its number (01–49): a status, a name, a plot,
- * a family, anything — it is merged over the generated row.
+ * Every commission is generated here with a default status. Confirmed project
+ * information can be added through an override keyed by collection number.
  *
  *   OVERRIDES = { 3: { status: 'Under construction', name: 'The Gradient House' } }
  *
- * Statuses used on the site: 'In design' · 'Under construction' · 'Built'.
- * Anything else is shown exactly as written.
+ * Never add a fiftieth record. The collection closes when all 49 records have
+ * moved beyond Available or In discussion.
  */
 import chapters from './chapters';
 
-export const STATUSES = ['In design', 'Under construction', 'Built'];
+export const STATUSES = ['Available', 'In discussion', 'Commissioned', 'In design', 'Under construction', 'Completed'];
 
 const OVERRIDES = {
   1: { status: 'Under construction' },
@@ -29,7 +28,20 @@ export const HOUSES = chapters.flatMap((idea, row) =>
       idea: idea.id,
       ideaIndex: row,
       ordinal: col + 1,
-      status: 'In design',
+      commission_id: `${idea.id} ${String(col + 1).padStart(2, '0')}`,
+      status: 'Available',
+      location: '',
+      publicName: '',
+      narrative: '',
+      designStage: '',
+      constructionStage: '',
+      completionDate: '',
+      images: [],
+      films: [],
+      drawings: [],
+      materials: [],
+      provenance: [],
+      publications: [],
       ...(OVERRIDES[number] || {}),
     };
   })
@@ -39,5 +51,11 @@ export const COUNTS = HOUSES.reduce((acc, h) => {
   acc[h.status] = (acc[h.status] || 0) + 1;
   return acc;
 }, {});
+
+export const TAKEN = HOUSES.filter(h => ['Commissioned', 'In design', 'Under construction', 'Completed'].includes(h.status)).length;
+export const AVAILABLE = HOUSES.length - TAKEN;
+export const COLLECTION_STATUS = TAKEN === 49 ? 'CLOSED' : 'OPEN';
+
+if (HOUSES.length !== 49) throw new Error('Project 49 must contain exactly forty-nine commission records.');
 
 export default HOUSES;

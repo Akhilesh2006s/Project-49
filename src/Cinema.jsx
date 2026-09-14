@@ -50,7 +50,7 @@ export default function Cinema({ chapter, scene, frame, opened, paused, progress
         <p className="eyebrow">{chapter.id} / {scene.eyebrow}</p>
         <h2>{scene.line[0]}<br /><em>{scene.line[1]}</em></h2>
         <p className="chapter-description">{chapter.description}</p>
-        <p className="chapter-count">Seven houses are designed under {chapter.id.toLowerCase()}.</p>
+        <p className="chapter-count">Seven interpretations of {chapter.id.toLowerCase()}. No repetition.</p>
       </div>
       {!sound && <button className="sound-invite" onClick={() => onEnable()}>◉ Hear this space <span>Enable sound</span></button>}
       <div className="cinema-bottom">
