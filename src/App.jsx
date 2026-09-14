@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import chapters from './data/chapters';
-import HOUSES, { AVAILABLE, COLLECTION_STATUS, COUNTS, STATUSES, TAKEN } from './data/houses';
+import HOUSES, { COLLECTION_STATUS } from './data/houses';
 import CONTACT from './data/contact';
 import PEOPLE from './data/people';
 import { Soundscape } from './sound';
@@ -8,13 +8,13 @@ import IdeaPreview from './IdeaPreview';
 import Cinema from './Cinema';
 
 const JOURNEY = [
-  ['Land', 'We study the site before we draw. Light, wind, trees, approach, views and neighbourhood become part of the brief.'],
-  ['Family', 'We begin with the people: how you gather, work, retreat, celebrate and imagine the years ahead.'],
-  ['Life', 'Daily rhythms become the brief. The house is organised around the way you live, not a standard plan.'],
-  ['Architecture', 'One of seven ideas becomes a lens as Saketh and AYRA develop a singular response to family and land.'],
-  ['Commission', 'The design, responsibilities, approvals, engineering, cost and programme are resolved into one clear undertaking.'],
-  ['Build', 'ANXA leads construction, craftspeople, quality and communication from the first day on site.'],
-  ['Completion', 'The finished residence enters the Project 49 archive with its identity, craft and architectural record intact.'],
+  ['Introduction', 'A private introduction begins the conversation about the home, the people and the ambition behind it.'],
+  ['Site', 'We understand the land first: light, wind, trees, approach, views and the character of its surroundings.'],
+  ['Life', 'We understand how the family gathers, works, retreats, celebrates and imagines the years ahead.'],
+  ['Idea', 'One of seven architectural propositions becomes a starting point, determined with the client rather than chosen as a package.'],
+  ['Architecture', 'Saketh and AYRA conceive a singular residence specifically for its site and family.'],
+  ['Making', 'ANXA brings engineering, approvals, materials, craft, landscape and construction into one resolved process.'],
+  ['Record', 'The completed residence enters the Project 49 archive with its identity, provenance and documentation intact.'],
 ];
 
 /* adds .in to every [data-reveal] element as it scrolls into view */
@@ -55,13 +55,13 @@ function Masthead({ solid }) {
         <button className="menu-close" onClick={closeMenu} aria-label="Close menu"><i /><i /></button>
         <p className="eyebrow">Project 49 · Hyderabad</p>
         <nav aria-label="Menu">
-          <a href="#home" onClick={closeMenu}><span>01</span>Beginning</a>
-          <a href="#ideas" onClick={closeMenu}><span>02</span>Seven ideas</a>
-          <a href="#houses" onClick={closeMenu}><span>03</span>Forty-nine</a>
-          <a href="#people" onClick={closeMenu}><span>04</span>The people</a>
-          <a href="#journey" onClick={closeMenu}><span>05</span>The journey</a>
+          <a href="#houses" onClick={closeMenu}><span>01</span>Collection</a>
+          <a href="#ideas" onClick={closeMenu}><span>02</span>Ideas</a>
+          <a href="#commission" onClick={closeMenu}><span>03</span>Commission</a>
+          <a href="#record" onClick={closeMenu}><span>04</span>Archive</a>
+          <a href="#city" onClick={closeMenu}><span>05</span>Hyderabad</a>
         </nav>
-        <a className="menu-commission" href="#conversation" onClick={closeMenu}>Begin a private commission <span>↗</span></a>
+        <a className="menu-commission" href="#conversation" onClick={closeMenu}>Request a private commission <span>↗</span></a>
         <p className="menu-location">Hyderabad, India</p>
       </aside>
     </>
@@ -82,7 +82,7 @@ function Opening() {
           and one way of living.
         </p>
         <div className="opening-actions">
-          <a className="enter-link" href="#conversation">Begin a private commission <span>↗</span></a>
+          <a className="enter-link" href="#conversation">Request a private commission <span>↗</span></a>
           <a className="enter-link quiet" href="#houses">View the collection <span>↓</span></a>
         </div>
       </div>
@@ -128,7 +128,10 @@ function Commission() {
       <div className="commission-copy" data-reveal>
         <p className="eyebrow">02 / What is a commission?</p>
         <h2>One family. One site.<br /><em>One architectural response.</em></h2>
-        <p>No catalogue. No standard plan. No repeated house. A commission is a direct relationship between a family, its land and the architects responsible for giving both a distinct form.</p>
+        <div className="commission-definition">
+          <p>No catalogue. No standard plan. No repeated house. A commission is a direct relationship between a family, its land and the architects responsible for giving both a distinct form.</p>
+          <p>There is no Project 49 house waiting to be purchased. There is a Project 49 commission waiting to be created.</p>
+        </div>
       </div>
     </section>
   );
@@ -204,7 +207,6 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
 function FortyNine({ enter }) {
   const [active, setActive] = useState(null);
   const shown = active ?? HOUSES[0];
-  const slug = s => s.toLowerCase().replace(/\s+/g, '-');
   return (
     <section className="houses" id="houses">
       <div className="section-heading" data-reveal>
@@ -223,8 +225,8 @@ function FortyNine({ enter }) {
             </button>
             {HOUSES.filter(h => h.ideaIndex === row).map(h => (
               <div key={h.number} role="cell" tabIndex={0}
-                className={'house ' + slug(h.status) + (shown.number === h.number ? ' shown' : '')}
-                aria-label={`${h.commission_id}, ${h.status}`}
+                className={'house ' + (shown.number === h.number ? 'shown' : '')}
+                aria-label={`${h.commission_id}, private architectural commission, Hyderabad`}
                 onMouseEnter={() => setActive(h)} onFocus={() => setActive(h)} onMouseLeave={() => setActive(null)}>
                 <span className="house-number">{String(h.ordinal).padStart(2, '0')}</span>
                 <i className="house-mark" />
@@ -234,13 +236,10 @@ function FortyNine({ enter }) {
         ))}
       </div>
       <div className="houses-foot" data-reveal>
-        <div className="houses-legend">
-          {STATUSES.map(s => <span key={s}><i className={slug(s)} />{s} · {COUNTS[s] || 0}</span>)}
-        </div>
+        <p className="houses-archive-label">The Project 49 architectural registry</p>
         <p className="houses-readout" aria-live="polite">
-          <strong>{shown.commission_id}</strong> · Project 49 · {shown.status}
+          <strong>{shown.commission_id}</strong> · Private commission · Hyderabad
         </p>
-        <p className="collection-count">{TAKEN} taken · {AVAILABLE} remaining · Collection {COLLECTION_STATUS.toLowerCase()}</p>
       </div>
     </section>
   );
@@ -329,11 +328,12 @@ function Place() {
       <div className="place-shade" />
       <div className="place-copy" data-reveal>
         <p className="eyebrow">09 / One city</p>
-        <h2>Built in Hyderabad.<br /><em>Shaped by the Deccan.</em></h2>
+        <h2>One city in transition.<br /><em>Shaped by the Deccan.</em></h2>
         <p>
           We do not import a style and place it on the land. We work with Hyderabad's sun, monsoon and stone,
           and with the Deccan traditions of courtyards, shade, lime, earth and craft. The result is contemporary
-          architecture that could belong here, and nowhere else.
+          architecture that could belong here, and nowhere else. Together, the commissions form a small architectural
+          record of Hyderabad at a particular moment in its transformation.
         </p>
       </div>
     </section>
@@ -426,6 +426,7 @@ function Finality() {
       <div className="finality-count" data-reveal>{COLLECTION_STATUS === 'CLOSED' ? '49 / 49' : '49'}</div>
       <p className="finality-label" data-reveal>{COLLECTION_STATUS === 'CLOSED' ? 'The collection is complete.' : 'Private architectural commissions.'}</p>
       <h2 data-reveal>{COLLECTION_STATUS === 'CLOSED' ? 'The collection is complete.' : 'A finite body of architecture.'}<br /><em>Every commission entirely its own.</em></h2>
+      <a className="enter-link finality-action" href="#conversation" data-reveal>Request a private commission <span>↗</span></a>
     </section>
   );
 }
@@ -446,7 +447,7 @@ function Footer() {
           <a href="#people">The people</a>
           <a href="#journey">The journey</a>
           <a href="#record">The architectural record</a>
-          <a href="#conversation">Begin a private commission</a>
+          <a href="#conversation">Request a private commission</a>
         </nav>
         <div className="footer-ideas" aria-hidden="true">
           {chapters.map(c => <span key={c.id}>{c.id.toLowerCase()}</span>)}

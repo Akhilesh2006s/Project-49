@@ -147,6 +147,7 @@ h1 em { color: var(--gold); font-size: .8em }
 .houses-legend i.complete { background: var(--olive); border-color: var(--olive) }
 .houses-readout { font-size: 13px; letter-spacing: .02em }
 .houses-readout strong { font: 400 20px/1 var(--serif); letter-spacing: 0; margin-right: 6px }
+.houses-archive-label { text-transform: uppercase; letter-spacing: .15em; font-size: 10px }
 .collection-count { width: 100%; padding-top: 18px; border-top: 1px solid var(--line-dark); text-align: right; text-transform: uppercase; letter-spacing: .14em; font-size: 10px }
 .house.available .house-mark { background: transparent }
 .house.in-discussion .house-mark, .houses-legend i.in-discussion { border-color: #8a7659; background: #8a765955 }
@@ -181,7 +182,9 @@ h1 em { color: var(--gold); font-size: .8em }
 .commission-number span { display: block; margin-top: 16px; font: 500 10px/1.4 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--olive) }
 .commission-copy { grid-column: 1 / -1; display: grid; grid-template-columns: .7fr 1.4fr 1fr; gap: clamp(24px, 5vw, 72px); align-items: start; padding-top: clamp(60px, 8vw, 110px) }
 .commission-copy h2 { font: 300 clamp(42px, 5vw, 78px)/1 var(--serif); letter-spacing: -.04em }
-.commission-copy p:last-child { font-size: 14px; line-height: 1.85; color: #555d4f }
+.commission-definition { display: grid; gap: 24px }
+.commission-definition p { font-size: 14px; line-height: 1.85; color: #555d4f }
+.commission-definition p:last-child { padding-top: 24px; border-top: 1px solid var(--line-dark); font: italic 300 clamp(20px, 1.6vw, 26px)/1.45 var(--serif); color: var(--sage) }
 
 /* ---------- permanent record ---------- */
 .record { padding: clamp(88px, 11vw, 160px) var(--gutter); background: var(--paper-deep); color: var(--olive); display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(48px, 9vw, 150px) }
@@ -236,6 +239,7 @@ h1 em { color: var(--gold); font-size: .8em }
 .finality-count { position: relative; top: -92px; font: 300 clamp(180px, 30vw, 460px)/.72 var(--serif); letter-spacing: -.1em; color: var(--gold); margin: clamp(42px, 6vw, 78px) 0 32px; transform: translateX(-.035em) }
 .finality-label { text-transform: uppercase; letter-spacing: .22em; font-size: 10px; color: #b7bdaf }
 .finality h2 { max-width: 1100px; font: 300 clamp(34px, 4.4vw, 68px)/1.02 var(--serif); letter-spacing: -.04em; margin-top: 34px }
+.finality-action { margin-top: clamp(28px, 4vw, 52px); color: var(--gold) }
 
 /* ---------- footer ---------- */
 footer { padding: clamp(60px, 7vw, 100px) var(--gutter) 28px; background: var(--moss) }
