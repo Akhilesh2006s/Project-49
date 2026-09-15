@@ -13,13 +13,13 @@
  */
 export const CONTACT = {
   enabled: true,
-  eyebrow: 'A private commission',
-  line: 'Request a private commission.',
-  note: 'Tell us about your land, your family and the life you want the architecture to hold. Every enquiry is considered personally.',
+  eyebrow: 'Talk to us',
+  line: 'Tell us about your land.',
+  note: 'Where it is, what you have in mind, and which of the seven ideas you like. We will call you back.',
   name: '',
   email: '',
   endpoint: '',
-  whatsapp: '', // international format, e.g. '+91 90000 00000'
+  whatsapp: '+91 90004 43131',
   phone: '',
   instagram: '', // handle without the @
   // Once registered, RERA requires the registration number and the authority
