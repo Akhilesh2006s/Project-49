@@ -65,18 +65,19 @@ function Opening() {
       <div className="opening-shade" />
       <div className="opening-copy">
         <p className="eyebrow">Project 49 · Hyderabad</p>
-        <h1>Same city. Different lives.<br /><em>Why should the homes be the same?</em></h1>
+        <h1>One city. A million ways to live.<br /><em>Different lives deserve different homes.</em></h1>
         <p className="opening-description">
-          Project 49 is seven ideas for a house in Hyderabad, and seven homes of each. Forty-nine, then we stop.
-          Bring your land. We design it and build it.
+          49 homes. 7 design principles. One limited collection. Bring your land, and we turn it into a home
+          designed around you.
         </p>
+        <p className="opening-neuro">Built on neuroarchitecture: homes that do more for you than just look good.</p>
         <div className="opening-actions">
-          <a className="enter-link" href="#ideas">See the seven ideas <span>↓</span></a>
-          <a className="enter-link quiet" href="#conversation">Start a conversation <span>↗</span></a>
+          <a className="enter-link" href="#ideas">Explore the 7 designs <span>↓</span></a>
+          <a className="enter-link quiet" href="#conversation">Start your journey <span>↗</span></a>
         </div>
       </div>
       <div className="opening-bottom">
-        <span>Seven ideas · Forty-nine homes</span>
+        <span>7 design principles · 49 homes</span>
         <a href="#idea">Scroll <i>↓</i></a>
         <span>Hyderabad</span>
       </div>
@@ -90,15 +91,15 @@ function Idea() {
       <div className="gap-grid">
         <div data-reveal>
           <p className="eyebrow">01 / The idea</p>
-          <h2>Your land. Your taste.<br /><em>Built by us.</em></h2>
+          <h2>Your land. Your way of living.<br /><em>Crafted by us.</em></h2>
         </div>
         <div className="gap-copy" data-reveal>
-          <p>Every Project 49 home is built on its owner's land, for its owner's family. You choose the idea it grows from. We design it and build it, start to finish.</p>
-          <p>Seven ideas for how a house can feel. Seven homes under each.</p>
-          <p className="gap-answer">7 × 7 = 49. Then we stop.</p>
+          <p>Every Project 49 home begins with your land and the way your family lives. You choose the design it grows from; we shape it, build it and hand you the keys.</p>
+          <p>Seven ways of living, each brought to life in only seven homes.</p>
+          <p className="gap-answer">Forty-nine homes. Forty-nine stories.</p>
           <ol className="gap-steps">
             <li><span>01</span>Your land</li>
-            <li><span>02</span>Your idea</li>
+            <li><span>02</span>Your design</li>
             <li><span>03</span>Your home</li>
           </ol>
         </div>
