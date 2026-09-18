@@ -44,13 +44,16 @@ export default function Cinema({ chapter, scene, frame, opened, paused, progress
         <button ref={closeRef} onClick={onLeave} aria-label="Close film and return to the seven ideas">All ideas <span>×</span></button>
       </div>
       <div className="chapter-entry" key={chapter.id} aria-hidden="true">
-        <span>{chapter.number} / Seven ideas</span><strong>{chapter.id.toLowerCase()}</strong><em>{chapter.title}</em>
+        <span>{chapter.number} / Seven ideas</span><strong>{chapter.id.toLowerCase()}</strong><em>{chapter.whisper || chapter.title}</em>
       </div>
       <div className="cinema-copy" key={`${chapter.id}-${frame}`}>
         <p className="eyebrow">{chapter.id} / {scene.eyebrow}</p>
         <h2>{scene.line[0]}<br /><em>{scene.line[1]}</em></h2>
         <p className="chapter-description">{chapter.description}</p>
         <p className="chapter-count">Seven homes will be built this way. Each one different.</p>
+        {frame === chapter.scenes.length - 1 && chapter.closing && (
+          <p className="chapter-closing">{chapter.closing.map((l, i) => <span key={i}>{l}</span>)}</p>
+        )}
       </div>
       {!sound && <button className="sound-invite" onClick={() => onEnable()}>◉ Hear this space <span>Enable sound</span></button>}
       <div className="cinema-bottom">

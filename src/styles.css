@@ -424,3 +424,46 @@ h1 em { font-size: .82em }
 .brand img { width: 62px; height: 52px }
 .is-solid .brand { font-size: 14px } .is-solid .brand img { width: 42px }
 @media (max-width: 600px) { h1 { font-size: 34px } .masthead { height: 76px } .brand { font-size: 13px; gap: 12px } .brand img { width: 42px } }
+
+/* ---------- scroll motion: lines rise out of a mask, images drift slowly ---------- */
+[data-lines] .ln { display: block; overflow: hidden; padding-bottom: .04em; margin-bottom: -.04em }
+[data-lines] .ln > i {
+  display: block; font-style: inherit;
+  transform: translateY(105%); opacity: 0;
+  transition: transform 1.25s cubic-bezier(.16,.84,.3,1) var(--d, 0ms), opacity 1.1s ease var(--d, 0ms);
+}
+[data-lines] .ln > i em { font-style: italic }
+.in [data-lines] .ln > i, [data-lines].in .ln > i, .opening [data-lines] .ln > i { transform: none; opacity: 1 }
+
+/* the hero lines arrive a beat after the page settles */
+.opening [data-lines] .ln > i { transition-delay: calc(var(--d, 0ms) + 420ms) }
+
+/* paragraphs and labels follow the heading, a little later and a little softer */
+[data-reveal] .eyebrow, [data-reveal] p, [data-reveal] li, [data-reveal] .enter-link,
+[data-reveal] .gap-steps, [data-reveal] .places-list { transition: opacity 1.1s ease .25s, transform 1.1s var(--ease) .25s }
+
+/* a hairline that draws itself across the section when the text arrives */
+.gap-copy .gap-answer, .section-heading > p:last-child { position: relative }
+.gap-copy .gap-answer::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--gold);
+  transform: scaleX(0); transform-origin: left; transition: transform 1.6s var(--ease) .4s;
+}
+[data-reveal].in .gap-answer::before { transform: scaleX(1) }
+
+/* slow drift: the hero photograph and the map move a little less than the page */
+[data-parallax] { will-change: transform }
+.opening-image[data-parallax] { transform: translate3d(0, var(--py, 0%), 0) scale(1.08); animation: none }
+.places-map[data-parallax] > * { transform: translate3d(0, calc(var(--py, 0%) * -.5), 0) }
+
+/* the closing thought of an idea, on its last film */
+.chapter-closing { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); font: italic 300 clamp(18px, 1.6vw, 26px)/1.35 var(--serif); color: var(--gold) }
+.chapter-closing span { display: block }
+.preview-caption .preview-whisper { margin-top: 8px; font: italic 300 clamp(15px, 1.2vw, 19px)/1.4 var(--serif); color: #e6e2d6; letter-spacing: 0; text-transform: none }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-lines] .ln > i { transform: none !important; opacity: 1 !important }
+  [data-parallax] { transform: none !important }
+}
+
+/* headings outside a revealed block are shown at once */
+.footer [data-lines] .ln > i, footer [data-lines] .ln > i { transform: none; opacity: 1 }

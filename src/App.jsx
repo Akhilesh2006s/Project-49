@@ -6,9 +6,43 @@ import { Soundscape } from './sound';
 import IdeaPreview from './IdeaPreview';
 import Cinema from './Cinema';
 
+/* Splits a heading into lines that rise out of a mask, one after another. */
+function splitLines(el) {
+  if (el.dataset.split) return;
+  el.dataset.split = '1';
+  const html = el.innerHTML.split(/<br\s*\/?>/i);
+  el.innerHTML = html.map((line, i) => `<span class="ln" style="--d:${i * 90}ms"><i>${line}</i></span>`).join('');
+}
+
+/* One scroll loop for the whole page: gives [data-parallax] elements a slow drift. */
+function useParallax() {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const els = [...document.querySelectorAll('[data-parallax]')];
+    if (!els.length) return;
+    let queued = false;
+    const draw = () => {
+      queued = false;
+      const vh = window.innerHeight;
+      for (const el of els) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) continue;
+        const centre = (r.top + r.height / 2 - vh / 2) / vh;      // -1 … 1
+        el.style.setProperty('--py', `${(centre * (Number(el.dataset.parallax) || 6)).toFixed(2)}%`);
+      }
+    };
+    const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
+    draw();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+  }, []);
+}
+
 /* adds .in to every [data-reveal] element as it scrolls into view */
 function useReveal() {
   useEffect(() => {
+    document.querySelectorAll('[data-lines]').forEach(splitLines);
     const els = document.querySelectorAll('[data-reveal]');
     if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
     const io = new IntersectionObserver(entries => {
@@ -60,12 +94,12 @@ function Masthead({ solid }) {
 function Opening() {
   return (
     <section className="opening" id="home">
-      <img className="opening-image" src="/opening/hero-courtyard.jpg" srcSet="/opening/hero-courtyard-1280.jpg 1280w, /opening/hero-courtyard.jpg 1672w" sizes="100vw"
+      <img className="opening-image" data-parallax="7" src="/opening/hero-courtyard.jpg" srcSet="/opening/hero-courtyard-1280.jpg 1280w, /opening/hero-courtyard.jpg 1672w" sizes="100vw"
         alt="Sunlight across a carved stone entrance and planted courtyard" fetchPriority="high" />
       <div className="opening-shade" />
       <div className="opening-copy">
         <p className="eyebrow">Project 49 · Hyderabad</p>
-        <h1>One city. A million ways to live.<br /><em>Different lives deserve different homes.</em></h1>
+        <h1 data-lines>One city. A million ways to live.<br /><em>Different lives deserve different homes.</em></h1>
         <p className="opening-description">
           49 homes. 7 design principles. One limited collection. Bring your land, and we turn it into a home
           designed around you.
@@ -91,7 +125,7 @@ function Idea() {
       <div className="gap-grid">
         <div data-reveal>
           <p className="eyebrow">01 / The idea</p>
-          <h2>Your land. Your way of living.<br /><em>Crafted by us.</em></h2>
+          <h2 data-lines>Your land. Your way of living.<br /><em>Crafted by us.</em></h2>
         </div>
         <div className="gap-copy" data-reveal>
           <p>Every Project 49 home begins with your land and the way your family lives. You choose the design it grows from; we shape it, build it and hand you the keys.</p>
@@ -114,7 +148,7 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
     <section className="ideas-section" id="ideas">
       <div className="section-heading" data-reveal>
         <p className="eyebrow">02 / The seven ideas</p>
-        <h2>Seven ways to build.<br /><em>Which one is yours?</em></h2>
+        <h2 data-lines>Seven ways to build.<br /><em>Which one is yours?</em></h2>
         <p>Each idea is a way of thinking about a house, not a fixed plan. Your home is drawn fresh for your land and your family.</p>
       </div>
       <div className="ideas-composition">
@@ -124,6 +158,7 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
           <span className="preview-number">{c.number}</span>
           <div className="preview-caption" key={c.id}>
             <p>{c.tags}</p>
+            <p className="preview-whisper">{c.whisper}</p>
             <h3>{c.title}</h3>
             <button onClick={() => enter(hover)}>Enter {c.id.toLowerCase()} <span>↗</span></button>
           </div>
@@ -164,10 +199,10 @@ function Places() {
     <section className="places" id="places">
       <div className="section-heading" data-reveal>
         <p className="eyebrow">03 / Where we build</p>
-        <h2>Hyderabad,<br /><em>seen from above.</em></h2>
+        <h2 data-lines>Hyderabad,<br /><em>seen from above.</em></h2>
         <p>Where the forty-nine will stand. Tap a place to see it up close. Have land elsewhere in the city? Tell us; we will look at it.</p>
       </div>
-      <div className="places-map" data-reveal>
+      <div className="places-map" data-reveal data-parallax="4">
         {PLACES.video
           ? <video src={PLACES.video} poster={PLACES.poster} autoPlay muted loop playsInline />
           : <div ref={ref} className="places-canvas" aria-label="Satellite map of Hyderabad with the Project 49 locations" />}
@@ -233,7 +268,7 @@ function Conversation() {
     <section className="conversation" id="conversation">
       <div className="conversation-copy" data-reveal>
         <p className="eyebrow">05 / {CONTACT.eyebrow}</p>
-        <h2>{CONTACT.line}</h2>
+        <h2 data-lines>{CONTACT.line}</h2>
         <p>{CONTACT.note}</p>
         <div className="private-links">
           {CONTACT.name && <span>{CONTACT.name}</span>}
@@ -285,7 +320,7 @@ function Footer() {
       <div className="footer-grid">
         <div>
           <p className="eyebrow">Design × Build</p>
-          <h2>AYRA <em>×</em> ANXA</h2>
+          <h2 data-lines>AYRA <em>×</em> ANXA</h2>
         </div>
         <nav className="footer-nav" aria-label="Sections">
           <a href="#idea">The idea</a>
@@ -316,6 +351,7 @@ export default function App() {
   const chapter = opened === null ? null : chapters[opened], scene = chapter?.scenes[frame];
 
   useReveal();
+  useParallax();
   useEffect(() => { engine.current = new Soundscape(); return () => engine.current.dispose(); }, []);
   useEffect(() => { if (sound) engine.current.scene(chapter?.id || 'HOME', scene?.id || ''); }, [sound, chapter, scene]);
   useEffect(() => {
@@ -328,6 +364,8 @@ export default function App() {
     try {
       await engine.current.start(); engine.current.volume(volume);
       typeof idea === 'string' ? engine.current.scene(idea, film || '') : engine.current.scene(chapter?.id || 'HOME', scene?.id || '');
+      if (typeof idea === 'string' && idea !== 'HOME') { engine.current.sting(idea); engine.current.theme(idea); }
+      if (idea === 'HOME') engine.current.theme(null);
       setSound(true); setMuted(false);
     } catch { setSound(false); }
   };
@@ -336,10 +374,10 @@ export default function App() {
     if (opened === null) trigger.current = document.activeElement;
     setFrame(0); setProgress(0); setPaused(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     setOpened(i); setHover(i); setVisited(v => [...new Set([...v, i])]);
-    if (sound) { engine.current.start(); engine.current.scene(chapters[i].id, chapters[i].scenes[0]?.id || ''); }
+    if (sound) { engine.current.start(); engine.current.sting(chapters[i].id); engine.current.theme(chapters[i].id); engine.current.scene(chapters[i].id, chapters[i].scenes[0]?.id || ''); }
     else if (!muted) enable(chapters[i].id, chapters[i].scenes[0]?.id);
   };
-  const leave = () => { setOpened(null); if (sound) { engine.current.start(); engine.current.scene('HOME'); } requestAnimationFrame(() => trigger.current?.focus()); };
+  const leave = () => { setOpened(null); if (sound) { engine.current.start(); engine.current.theme(null); engine.current.scene('HOME'); } requestAnimationFrame(() => trigger.current?.focus()); };
   const advance = () => { setProgress(0); setFrame(n => (n + 1) % chapter.scenes.length); if (sound && chapter.id === 'SILENCE') engine.current.scene('SILENCE'); };
   const back = () => { setProgress(0); setFrame(n => (n - 1 + chapter.scenes.length) % chapter.scenes.length); };
   const pause = () => { setPaused(!paused); if (sound) { if (!paused) engine.current.suspend(); else engine.current.start(); } };
