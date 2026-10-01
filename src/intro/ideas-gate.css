@@ -1,0 +1,142 @@
+/* PROJECT 49 — Ideas Gate
+   The last frame of the film and the first screen of the site are the same composition.
+   Everything is laid out on a fixed 1920×1080 stage that is scaled to fit the viewport,
+   so the live page lines up exactly with the final frame of the video. */
+
+.p49-gate {
+  --gate-bg: #080e0c;
+  --gate-ivory: #efece4;
+  --gate-gold: #d7c09c;
+  --gate-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --gate-sans: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  position: absolute; inset: 0;
+  background: var(--gate-bg);
+  overflow: hidden;
+}
+/* The gate is the first screen of the website */
+.p49-gate-hero { position: relative; width: 100%; height: 100vh; height: 100svh; min-height: 420px; background: #080e0c; z-index: 1; }
+.masthead { transition: background .5s, height .5s, border-color .5s, opacity .5s, transform .5s; }
+body.p49-at-gate .masthead { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+.p49-gate-stage {
+  position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+  transform-origin: center center; transform: translate(-50%, -50%);
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 42%, #18211b 0%, #0e1511 55%, var(--gate-bg) 100%);
+  color: var(--gate-ivory);
+  font-family: var(--gate-sans);
+  -webkit-font-smoothing: antialiased;
+}
+.p49-gate-grain {
+  position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background: radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%);
+}
+
+/* Mark + title */
+.p49-gate-mark { position: absolute; left: 50%; top: 118px; width: 230px; transform: translateX(-50%); }
+.p49-gate-title {
+  position: absolute; left: 0; right: 0; top: 262px; margin: 0; text-align: center;
+  font-family: var(--gate-serif); font-weight: 300; font-size: 112px; line-height: 1;
+  letter-spacing: .28em; text-indent: .28em; /* keeps the spaced word optically centred */
+  white-space: nowrap; font-variant-numeric: lining-nums; font-feature-settings: 'lnum' 1;
+}
+.p49-gate-title span { display: inline-block; }
+.p49-gate-rule {
+  position: absolute; left: 50%; top: 418px; height: 1px; width: 260px; transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, var(--gate-gold) 20%, var(--gate-gold) 80%, transparent);
+}
+.p49-gate-tagline {
+  position: absolute; left: 0; right: 0; top: 446px; margin: 0; text-align: center;
+  font-family: var(--gate-serif); font-style: italic; font-weight: 400; font-size: 40px;
+  color: var(--gate-gold); letter-spacing: .02em;
+}
+
+/* The seven ideas: four above, three below */
+.p49-gate-ideas { position: absolute; left: 0; right: 0; top: 596px; margin: 0; padding: 0; list-style: none; }
+.p49-gate-row { display: flex; justify-content: center; gap: 0; }
+.p49-gate-row + .p49-gate-row { margin-top: 46px; }
+.p49-gate-idea {
+  position: relative; width: 310px; padding: 14px 0 18px; text-align: center;
+  background: none; border: 0; color: inherit; font: inherit; cursor: pointer;
+}
+.p49-gate-idea + .p49-gate-idea::before {
+  content: ''; position: absolute; left: 0; top: 34px; width: 1px; height: 64px;
+  background: linear-gradient(180deg, transparent, rgba(215,192,156,.38), transparent);
+}
+.p49-gate-num {
+  display: block; font-family: var(--gate-sans); font-weight: 500; font-size: 16px;
+  letter-spacing: .34em; text-indent: .34em; color: var(--gate-gold);
+}
+.p49-gate-name {
+  display: block; margin-top: 10px; font-family: var(--gate-serif); font-weight: 300; font-size: 72px; line-height: 1;
+  letter-spacing: .02em;
+}
+.p49-gate-name::after {
+  content: ''; display: block; height: 1px; width: 0; margin: 14px auto 0; background: var(--gate-gold);
+  transition: width .5s cubic-bezier(.22, 1, .36, 1);
+}
+.p49-gate.is-live .p49-gate-idea:hover .p49-gate-name::after,
+.p49-gate.is-live .p49-gate-idea:focus-visible .p49-gate-name::after { width: 64px; }
+.p49-gate.is-live .p49-gate-idea:hover .p49-gate-name { color: #fffaf0; }
+.p49-gate-idea:focus-visible { outline: none; }
+
+.p49-gate-hint {
+  position: absolute; left: 0; right: 0; top: 952px; margin: 0; text-align: center;
+  font-family: var(--gate-sans); font-size: 14px; font-weight: 400; letter-spacing: .38em; text-indent: .38em;
+  text-transform: uppercase; color: rgba(215,192,156,.72);
+}
+
+/* Live-site only controls (never drawn into the film) */
+.p49-gate-enter {
+  position: absolute; right: clamp(20px, 4vw, 56px); bottom: clamp(20px, 4vh, 44px); z-index: 2;
+  background: none; border: 1px solid rgba(215,192,156,.45); color: var(--gate-gold); cursor: pointer;
+  font: 400 12px/1 var(--gate-sans); letter-spacing: .28em; text-transform: uppercase; padding: 14px 20px;
+  opacity: 0; transition: opacity .8s ease .2s, background .3s ease;
+}
+.p49-gate.is-live .p49-gate-enter { opacity: 1; }
+.p49-gate-enter:hover { background: rgba(215,192,156,.1); }
+
+/* Film player that hands over to the gate */
+.p49-intro-film { position: fixed; inset: 0; z-index: 61; background: #080e0c; }
+.p49-intro-film video { width: 100%; height: 100%; object-fit: contain; background: #080e0c; }
+.p49-intro-skip {
+  position: fixed; right: clamp(20px, 4vw, 56px); bottom: clamp(20px, 4vh, 44px); z-index: 62;
+  background: none; border: 1px solid rgba(239,236,228,.35); color: #efece4; cursor: pointer;
+  font: 400 12px/1 Inter, system-ui, sans-serif; letter-spacing: .28em; text-transform: uppercase; padding: 14px 20px;
+}
+.p49-intro-sound { right: auto; left: clamp(20px, 4vw, 56px); }
+
+
+/* Opening invitation (before the film) */
+.p49-intro-invite {
+  position: fixed; inset: 0; z-index: 63; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse 60% 55% at 50% 45%, #18211b 0%, #0e1511 55%, #080e0c 100%);
+  color: #efece4; text-align: center; padding: 24px; animation: p49-invite-in 1.4s ease both;
+}
+.p49-invite-mark { width: clamp(90px, 12vw, 150px); opacity: .92; margin-bottom: clamp(18px, 3vh, 30px); }
+.p49-invite-title {
+  margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; line-height: 1;
+  font-size: clamp(34px, 6vw, 72px); letter-spacing: .26em; text-indent: .26em; font-variant-numeric: lining-nums;
+}
+.p49-invite-rule { display: block; width: 160px; height: 1px; margin: clamp(18px, 3vh, 28px) 0 clamp(26px, 5vh, 46px);
+  background: linear-gradient(90deg, transparent, #d7c09c 20%, #d7c09c 80%, transparent); }
+.p49-invite-begin {
+  display: inline-flex; align-items: center; gap: 14px; cursor: pointer;
+  background: none; border: 1px solid rgba(215,192,156,.55); color: #efece4; padding: 16px 34px 16px 28px;
+  font: 400 13px/1 Inter, system-ui, sans-serif; letter-spacing: .32em; text-transform: uppercase;
+  transition: background .3s ease, border-color .3s ease;
+}
+.p49-invite-begin:hover, .p49-invite-begin:focus-visible { background: rgba(215,192,156,.12); border-color: #d7c09c; outline: none; }
+.p49-invite-play { width: 0; height: 0; border-left: 9px solid #d7c09c; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.p49-invite-note { margin: 22px 0 0; font: italic 400 18px/1.3 'Cormorant Garamond', Georgia, serif; color: rgba(215,192,156,.8); }
+.p49-invite-skip {
+  position: absolute; bottom: clamp(20px, 4vh, 44px); left: 50%; transform: translateX(-50%);
+  background: none; border: 0; cursor: pointer; color: rgba(239,236,228,.55);
+  font: 400 11px/1 Inter, system-ui, sans-serif; letter-spacing: .28em; text-transform: uppercase;
+}
+.p49-invite-skip:hover { color: #efece4; }
+@keyframes p49-invite-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .p49-intro-invite { animation: none; }
+  .p49-gate-name::after, .p49-gate-enter { transition: none; }
+}

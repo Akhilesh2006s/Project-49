@@ -5,6 +5,7 @@ import PLACES from './data/places';
 import { Soundscape } from './sound';
 import IdeaPreview from './IdeaPreview';
 import Cinema from './Cinema';
+import IntroFilm from './intro/IntroFilm';
 
 /* Splits a heading into lines that rise out of a mask, one after another. */
 function splitLines(el) {
@@ -398,6 +399,7 @@ export default function App() {
       <div className="site-shell" inert={chapter ? true : undefined}>
         <Masthead solid={solid} />
         <main>
+          <IntroFilm onEnterIdea={enter} />
           <Opening />
           <Idea />
           <Ideas hover={hover} setHover={setHover} enter={enter} opened={opened} visited={visited} />
