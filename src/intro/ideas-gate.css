@@ -105,6 +105,41 @@ body.p49-at-gate .masthead { opacity: 0; transform: translateY(-12px); pointer-e
 }
 .p49-intro-sound { right: auto; left: clamp(20px, 4vw, 56px); }
 
+/* Captions over the opening film.
+   .p49-film-frame is the exact 16:9 box the video draws into (object-fit: contain), so captions sit inside the picture
+   at the same place on every screen; type scales with the frame (56px at 1920 wide, like the captioned master). */
+.p49-intro-cc { right: auto; left: calc(clamp(20px, 4vw, 56px) + 148px); }
+.p49-film-frame {
+  --fw: min(100vw, 177.778vh);
+  position: fixed; left: 50%; top: 50%; z-index: 61; pointer-events: none;
+  width: var(--fw); height: calc(var(--fw) * 0.5625); transform: translate(-50%, -50%);
+}
+.p49-film-shade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 36%; opacity: 0; transition: opacity 1.2s ease;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.08) 35%, rgba(0,0,0,.26) 72%, rgba(0,0,0,.42) 100%);
+}
+.p49-film-frame.is-shaded .p49-film-shade { opacity: 1; }
+.p49-film-captions {
+  position: absolute; left: 10%; right: 10%; bottom: max(8.5%, calc(clamp(20px, 4vh, 44px) + 66px));
+  display: flex; justify-content: center; align-items: flex-end; min-height: 2.6em;
+  font-size: max(15px, calc(var(--fw) * 0.0292));
+}
+.p49-film-caption {
+  margin: 0; text-align: center; white-space: pre-line;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 1em; line-height: 1.25;
+  letter-spacing: .035em; color: #efece4; font-variant-numeric: lining-nums;
+  text-shadow: 0 0 .35em rgba(0,0,0,.55), 0 .06em .5em rgba(0,0,0,.45), 0 0 .12em rgba(0,0,0,.6);
+  animation: p49-cap-in .32s ease-out both;
+}
+@keyframes p49-cap-in { from { opacity: 0; transform: translateY(.12em); } to { opacity: 1; transform: none; } }
+
+/* Tall phone screens: the picture is a thin band, so captions move just below it where there is room to read */
+@media (max-aspect-ratio: 4/5) {
+  .p49-film-shade { display: none; }
+  .p49-film-captions { top: calc(100% + 22px); bottom: auto; left: 22px; right: 22px; align-items: flex-start; font-size: 19px; }
+  .p49-intro-cc { left: auto; right: clamp(20px, 4vw, 56px); bottom: calc(clamp(20px, 4vh, 44px) + 56px); }
+}
+
 
 /* Opening invitation (before the film) */
 .p49-intro-invite {
@@ -138,5 +173,6 @@ body.p49-at-gate .masthead { opacity: 0; transform: translateY(-12px); pointer-e
 
 @media (prefers-reduced-motion: reduce) {
   .p49-intro-invite { animation: none; }
+  .p49-film-caption { animation: none; }
   .p49-gate-name::after, .p49-gate-enter { transition: none; }
 }

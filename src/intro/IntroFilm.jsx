@@ -1,18 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import { mountGate } from './ideasGate';
+import { FILM_CAPTIONS } from './filmCaptions';
 import './ideas-gate.css';
 
 /* The first screen of the website is the Ideas Gate: PROJECT 49 and the seven ideas, four above and
-   three below. It is the exact last frame of the ONE OF ONE film.
+   three below. It is the exact last frame of the opening film (What Holds).
 
    First visit: a quiet invitation -> "Begin" plays the film full-screen with sound -> the film ends
    on the gate, the film layer lifts away and the identical frame underneath is now the live website.
    It stays as the top screen of the site (every later visit and refresh lands on it directly).
    Clicking an idea opens that idea; the rest of the website continues below when you scroll. */
 
-const FILM = '/film/p49-one-of-one.mp4';
-const GATE_STARTS_AT = 70.4;          // second of the film where the Ideas Gate begins
+const FILM = '/film/p49-what-holds.mp4';
+const GATE_STARTS_AT = 59.92;          // second of the film where the Ideas Gate begins
 const SEEN_KEY = 'p49-intro-seen';
+const CC_KEY = 'p49-film-captions';     // remembers if a visitor turned captions off
+
+function captionsOn() {
+  try { return localStorage.getItem(CC_KEY) !== 'off'; } catch { return true; }
+}
+const SHADE_UNTIL = 56.3;               // the end card and the gate stay clean
+const captionAt = t => FILM_CAPTIONS.findIndex(([s, e]) => t >= s && t < e);
 
 function firstOverlay() {
   try {
@@ -26,6 +34,9 @@ function firstOverlay() {
 export default function IntroFilm({ onEnterIdea }) {
   const [overlay, setOverlay] = useState(firstOverlay); // 'invite' | 'film' | null
   const [muted, setMuted] = useState(false);
+  const [cc, setCc] = useState(captionsOn);
+  const [cue, setCue] = useState(-1);                    // index of the caption on screen, -1 = none
+  const [shade, setShade] = useState(false);             // soft dark fade under the captions, picture only
   const heroRef = useRef(null), gateEl = useRef(null), gate = useRef(null), videoRef = useRef(null);
   const overlayRef = useRef(overlay); overlayRef.current = overlay;
 
@@ -48,6 +59,23 @@ export default function IntroFilm({ onEnterIdea }) {
     window.scrollTo(0, 0);
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
+  }, [overlay]);
+
+  // Captions follow the film frame by frame (timeupdate is too coarse for clean fades).
+  useEffect(() => {
+    if (overlay !== 'film') { setCue(-1); setShade(false); return; }
+    let raf = 0, last = -2, lastShade = null;
+    const tick = () => {
+      const v = videoRef.current;
+      const t = v ? v.currentTime : 0;
+      const i = v ? captionAt(t) : -1;
+      if (i !== last) { last = i; setCue(i); }
+      const sh = t < SHADE_UNTIL;
+      if (sh !== lastShade) { lastShade = sh; setShade(sh); }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, [overlay]);
 
   // Hide the small site header while the gate is on screen (the gate carries the mark itself).
@@ -94,6 +122,11 @@ export default function IntroFilm({ onEnterIdea }) {
     if (v.paused) v.play().catch(() => {});
   };
 
+  const toggleCaptions = () => setCc(on => {
+    try { localStorage.setItem(CC_KEY, on ? 'off' : 'on'); } catch {}
+    return !on;
+  });
+
   return (
     <>
       <section className="p49-gate-hero" id="start" ref={heroRef} aria-label="Project 49 - choose an idea">
@@ -106,7 +139,15 @@ export default function IntroFilm({ onEnterIdea }) {
             onEnded={onEnded} onError={onError} />
           {overlay === 'film' && (
             <>
+              {/* Same 16:9 box as the picture (object-fit: contain), so captions always sit inside the frame */}
+              <div className={'p49-film-frame' + (cc && shade ? ' is-shaded' : '')} aria-hidden="true">
+                <div className="p49-film-shade" />
+                <div className="p49-film-captions">
+                  {cc && cue >= 0 && <p key={cue} className="p49-film-caption">{FILM_CAPTIONS[cue][2]}</p>}
+                </div>
+              </div>
               <button className="p49-intro-skip p49-intro-sound" onClick={toggleSound}>{muted ? 'Sound on' : 'Sound off'}</button>
+              <button className="p49-intro-skip p49-intro-cc" onClick={toggleCaptions} aria-pressed={cc}>{cc ? 'Captions off' : 'Captions on'}</button>
               <button className="p49-intro-skip" onClick={skip}>Skip film</button>
             </>
           )}
