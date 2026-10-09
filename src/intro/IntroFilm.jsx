@@ -36,7 +36,8 @@ export default function IntroFilm({ onEnterIdea }) {
   const [muted, setMuted] = useState(false);
   const [cc, setCc] = useState(captionsOn);
   const [cue, setCue] = useState(-1);                    // index of the caption on screen, -1 = none
-  const [shade, setShade] = useState(false);             // soft dark fade under the captions, picture only
+  const [shade, setShade] = useState(false);
+  const [leaving, setLeaving] = useState(false);          // film fading into the gate             // soft dark fade under the captions, picture only
   const heroRef = useRef(null), gateEl = useRef(null), gate = useRef(null), videoRef = useRef(null);
   const overlayRef = useRef(overlay); overlayRef.current = overlay;
 
@@ -103,7 +104,11 @@ export default function IntroFilm({ onEnterIdea }) {
     v.play().catch(() => { v.muted = true; setMuted(true); v.play().catch(() => {}); });
   };
 
-  const onEnded = () => { gate.current?.finish(); endFilm(); };
+  const onEnded = () => {
+    gate.current?.finish();
+    setLeaving(true);                                     // dissolve the film into the gate
+    setTimeout(() => { setLeaving(false); endFilm(); }, 900);
+  };
 
   // Skip: the gate animates in live from wherever the film was.
   const skip = () => {
@@ -134,7 +139,7 @@ export default function IntroFilm({ onEnterIdea }) {
       </section>
 
       {overlay && (
-        <div className="p49-intro-film">
+        <div className={'p49-intro-film' + (leaving ? ' is-leaving' : '')}>
           <video ref={videoRef} src={FILM} playsInline preload="auto" style={{ opacity: overlay === 'film' ? 1 : 0 }}
             onEnded={onEnded} onError={onError} />
           {overlay === 'film' && (

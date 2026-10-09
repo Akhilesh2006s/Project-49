@@ -98,6 +98,15 @@ body.p49-at-gate .masthead { opacity: 0; transform: translateY(-12px); pointer-e
 /* Film player that hands over to the gate */
 .p49-intro-film { position: fixed; inset: 0; z-index: 61; background: #080e0c; }
 .p49-intro-film video { width: 100%; height: 100%; object-fit: contain; background: #080e0c; }
+/* Cinema: the film fills the whole screen on landscape screens (no black bars).
+   Tall phones keep the full frame so nothing important is cut off. */
+@media (min-aspect-ratio: 4/5) {
+  .p49-intro-film video { object-fit: cover; }
+  .p49-film-frame { --fw: max(100vw, 177.778vh); }
+}
+/* the film dissolves into the live gate underneath instead of cutting */
+.p49-intro-film { transition: opacity .9s cubic-bezier(.22,1,.36,1); }
+.p49-intro-film.is-leaving { opacity: 0; pointer-events: none; }
 .p49-intro-skip {
   position: fixed; right: clamp(20px, 4vw, 56px); bottom: clamp(20px, 4vh, 44px); z-index: 62;
   background: none; border: 1px solid rgba(239,236,228,.35); color: #efece4; cursor: pointer;
