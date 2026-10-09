@@ -476,3 +476,76 @@ h1 em { font-size: .82em }
 [data-reveal] { transform: translateY(18px); transition: opacity .8s var(--ease), transform .8s var(--ease) }
 .conversation-form .form-alt { display: block; margin-top: 4px; font-size: 12px; letter-spacing: .04em; color: #a9b0a3; text-transform: none }
 .conversation-form .form-alt a { color: var(--gold); border-bottom: 1px solid #d7c09c55 }
+
+/* =========================================================
+   CINEMA — full-bleed film sections (Oct 2026)
+   ========================================================= */
+.cine { position: relative; overflow: hidden; isolation: isolate; background: #070a08; color: var(--ivory) }
+.film { position: absolute; inset: 0; z-index: -1; overflow: hidden }
+.film video { position: absolute; inset: -6% 0; width: 100%; height: 112%; object-fit: cover; transform: translate3d(0, var(--py, 0), 0) scale(1.04); will-change: transform }
+.film-grade { position: absolute; inset: 0; background:
+  radial-gradient(120% 90% at 50% 45%, transparent 35%, #05080680 100%),
+  linear-gradient(0deg, #070a08f0 0%, #070a0899 26%, transparent 58%),
+  linear-gradient(180deg, #070a0899 0%, transparent 22%) }
+.film-deep .film-grade { background: linear-gradient(90deg, #070a08f2 0%, #070a08c4 46%, #070a0866 100%), linear-gradient(0deg, #070a08cc, transparent 40%) }
+/* thin cinema bars */
+.cine-letterbox { position: absolute; inset: 0; pointer-events: none; z-index: 2 }
+.cine-letterbox::before, .cine-letterbox::after { content: ''; position: absolute; left: 0; right: 0; height: clamp(14px, 3.2vh, 34px); background: #050605 }
+.cine-letterbox::before { top: 0 } .cine-letterbox::after { bottom: 0 }
+/* film grain over the whole site */
+body::after { content: ''; position: fixed; inset: -50%; z-index: 40; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(6) infinite }
+@keyframes grain { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-3%)} 60%{transform:translate(-2%,-1%)} 80%{transform:translate(3%,3%)} 100%{transform:translate(0,0)} }
+
+/* HERO */
+.cine-hero { min-height: 100svh; display: flex; align-items: flex-end }
+.cine-hero-copy { position: relative; z-index: 3; padding: 0 var(--gutter) clamp(110px, 16vh, 170px); max-width: 1100px; animation: rise 1.8s var(--ease) both }
+.cine-hero-copy .eyebrow { color: #e9e3d4 }
+.cine-hero h1 { font: 300 clamp(46px, 6.6vw, 112px)/.98 var(--serif); letter-spacing: -.035em; margin: 22px 0 26px; text-shadow: 0 2px 40px #0008 }
+.cine-hero h1 em { display: inline-block; margin-top: .12em; font-size: .62em; letter-spacing: -.02em }
+.cine-hero-line { font: italic 300 clamp(18px, 1.6vw, 24px)/1.4 var(--serif); color: #e7dfcc; padding-left: 16px; border-left: 1px solid var(--gold) }
+.cine-hero .opening-bottom { z-index: 3; bottom: clamp(34px, 5vh, 52px) }
+
+/* CHAPTERS — three full screens that stack over each other as you scroll */
+.chapters { position: relative; background: #070a08 }
+.chapter { position: sticky; top: 0; height: 100svh; min-height: 560px; display: flex; align-items: flex-end }
+.chapter + .chapter { box-shadow: 0 -30px 60px #0009 }
+.chapter-copy { position: relative; z-index: 3; padding: 0 var(--gutter) clamp(90px, 14vh, 150px); max-width: 1000px }
+.chapter-n { display: block; font: italic 300 clamp(18px, 1.6vw, 24px)/1 var(--serif); color: var(--gold); margin-bottom: 20px; letter-spacing: .04em }
+.chapter h2 { font: 300 clamp(48px, 6.8vw, 116px)/.96 var(--serif); letter-spacing: -.04em; text-shadow: 0 2px 40px #0009 }
+.chapter p { margin-top: 28px; max-width: 520px; font: 300 clamp(17px, 1.35vw, 21px)/1.6 var(--serif); color: #e2ddd0 }
+
+/* INTERLUDE */
+.interlude { height: 100svh; min-height: 560px; display: grid; place-items: center; text-align: center }
+.interlude .film-grade { background: radial-gradient(80% 70% at 50% 50%, #070a0899, #070a08e6) }
+.interlude blockquote { position: relative; z-index: 3; margin: 0; padding: 0 var(--gutter) }
+.interlude p { font: 300 clamp(44px, 6.2vw, 104px)/1 var(--serif); letter-spacing: -.035em }
+.interlude cite { display: block; margin-top: 34px; font: normal 500 10px/1 var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--gold) }
+
+/* SEVEN IDEAS — moved into the dark */
+.ideas-section { background: #0a0e0b; color: var(--ivory); border-top: 1px solid var(--line) }
+.ideas-section em { color: var(--gold-deep) }
+.ideas-section .idea-row { border-color: #ffffff1c }
+.ideas-section .idea-row:first-child { border-top-color: #ffffff1c }
+.ideas-section .idea-detail, .ideas-section .list-note { color: #9da496 }
+.ideas-section .idea-row.selected { color: var(--gold) }
+.ideas-section .idea-preview { height: min(78vh, 760px) }
+
+/* PEOPLE over the craftsman */
+.credits.cine { min-height: 92svh; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: clamp(90px, 13vh, 140px) }
+.credits.cine > *:not(.film):not(.cine-letterbox) { position: relative; z-index: 3 }
+.credits.cine .film-grade { background: linear-gradient(0deg, #070a08f5 0%, #070a08b3 45%, #070a0855 100%) }
+
+/* CONVERSATION over blue hour */
+.conversation.cine > *:not(.film) { position: relative; z-index: 3 }
+.conversation.cine { border-top: 0; min-height: 100svh; align-items: center }
+
+@media (max-width: 760px) {
+  .cine-hero-copy { padding-bottom: 120px }
+  .chapter-copy { padding-bottom: 96px }
+  .chapter p { font-size: 17px }
+  .film video { inset: 0; height: 100%; transform: none }
+}
+@media (prefers-reduced-motion: reduce) { body::after { animation: none } .chapter { position: relative } }
+.cine-hero [data-lines] .ln > i { transform: none; opacity: 1; transition-delay: calc(var(--d, 0ms) + 420ms) }

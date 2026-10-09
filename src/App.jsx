@@ -57,6 +57,25 @@ function useReveal() {
   }, []);
 }
 
+/* A full-bleed film loop: plays only while on screen, a still frame for reduced motion. */
+function Film({ name, className = '', parallax = 0 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const v = ref.current; if (!v) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }, { threshold: 0.05 });
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div className={'film ' + className} aria-hidden="true">
+      <video ref={ref} src={`/cine/${name}.mp4`} poster={`/cine/${name}.jpg`} muted loop playsInline preload="metadata"
+        data-parallax={parallax || undefined} />
+      <div className="film-grade" />
+    </div>
+  );
+}
+
 function Masthead({ solid, hidden }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -97,19 +116,15 @@ function Masthead({ solid, hidden }) {
 
 function Opening() {
   return (
-    <section className="opening" id="home">
-      <img className="opening-image" data-parallax="7" src="/opening/hero-courtyard.jpg" srcSet="/opening/hero-courtyard-1280.jpg 1280w, /opening/hero-courtyard.jpg 1672w" sizes="100vw"
-        alt="Sunlight across a carved stone entrance and planted courtyard" fetchPriority="high" />
-      <div className="opening-shade" />
-      <div className="opening-copy">
+    <section className="cine cine-hero" id="home">
+      <Film name="atrium" parallax={5} />
+      <div className="cine-letterbox" aria-hidden="true" />
+      <div className="cine-hero-copy">
         <p className="eyebrow">Project 49 · Hyderabad</p>
         <h1 data-lines>One city. A million ways to live.<br /><em>Different lives deserve different homes.</em></h1>
-        <p className="opening-description">
-          Bring your land. Choose the idea your home grows from. We design it and build it, start to finish.
-        </p>
-        <p className="opening-neuro">Forty-nine homes in Hyderabad. Then we stop.</p>
+        <p className="cine-hero-line">Forty-nine homes. Built on your land. Then we stop.</p>
         <div className="opening-actions">
-          <a className="enter-link" href="#idea">How it works <span>↓</span></a>
+          <a className="enter-link" href="#idea">Begin <span>↓</span></a>
           <a className="enter-link quiet" href="#conversation">Tell us about your land <span>↗</span></a>
         </div>
       </div>
@@ -122,25 +137,40 @@ function Opening() {
   );
 }
 
+const CHAPTERS = [
+  { n: '01', film: 'land', title: ['It begins', 'with your land.'], line: 'Every Project 49 home stands on land the family already owns. We walk it with you first: the light, the trees, the way the ground falls.' },
+  { n: '02', film: 'idea', title: ['Then,', 'an idea.'], line: 'You choose the idea your home grows from: light, air, art, roots, earth, silence or future. Then it is drawn fresh, for your land and your family alone.' },
+  { n: '03', film: 'home', title: ['And finally,', 'your home.'], line: 'We design it, build it and hand you the keys. Forty-nine homes in all. Then we stop, so every one of them stays one of one.' },
+];
+
 function Idea() {
   return (
-    <section className="gap" id="idea">
-      <div className="gap-grid">
-        <div data-reveal>
-          <p className="eyebrow">01 / The idea</p>
-          <h2 data-lines>Your land. Your way of living.<br /><em>Crafted by us.</em></h2>
-        </div>
-        <div className="gap-copy" data-reveal>
-          <p>Every Project 49 home begins with your land and the way your family lives. You choose the design it grows from; we shape it, build it and hand you the keys.</p>
-          <p>Seven ideas. Forty-nine homes in all. Then we stop, so every one of them stays one of one.</p>
-          <p className="gap-answer">Forty-nine homes. Forty-nine stories.</p>
-          <ol className="gap-steps">
-            <li><span>01</span>Your land</li>
-            <li><span>02</span>Your design</li>
-            <li><span>03</span>Your home</li>
-          </ol>
-        </div>
-      </div>
+    <section className="chapters" id="idea" aria-label="How a Project 49 home begins">
+      {CHAPTERS.map(c => (
+        <article className="cine chapter" key={c.n}>
+          <Film name={c.film} parallax={4} />
+          <div className="cine-letterbox" aria-hidden="true" />
+          <div className="chapter-copy" data-reveal>
+            <span className="chapter-n">{c.n}</span>
+            <h2 data-lines>{c.title[0]}<br /><em>{c.title[1]}</em></h2>
+            <p>{c.line}</p>
+          </div>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+/* a single still moment between chapters */
+function Interlude() {
+  return (
+    <section className="cine interlude" aria-label="Interlude">
+      <Film name="reading" parallax={3} />
+      <div className="cine-letterbox" aria-hidden="true" />
+      <blockquote data-reveal>
+        <p data-lines>A home is not finished<br /><em>the day it is built.</em></p>
+        <cite>Project 49</cite>
+      </blockquote>
     </section>
   );
 }
@@ -220,7 +250,9 @@ function Places() {
 
 function People() {
   return (
-    <section className="credits" id="people">
+    <section className="cine credits" id="people">
+      <Film name="craft" parallax={3} />
+      <div className="cine-letterbox" aria-hidden="true" />
       <p className="eyebrow" data-reveal>04 / The people</p>
       <div className="credits-row" data-reveal>
         <div className="credit">
@@ -274,7 +306,8 @@ function Conversation() {
   };
 
   return (
-    <section className="conversation" id="conversation">
+    <section className="cine conversation" id="conversation">
+      <Film name="bluehour" className="film-deep" />
       <div className="conversation-copy" data-reveal>
         <p className="eyebrow">05 / {CONTACT.eyebrow}</p>
         <h2 data-lines>{CONTACT.line}</h2>
@@ -422,6 +455,7 @@ export default function App() {
           <Opening />
           <Idea />
           <Ideas hover={hover} setHover={setHover} enter={enter} opened={opened} visited={visited} />
+          <Interlude />
           <Places />
           <People />
           <Conversation />
