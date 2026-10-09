@@ -7,6 +7,9 @@ import IdeaPreview from './IdeaPreview';
 import Cinema from './Cinema';
 import IntroFilm from './intro/IntroFilm';
 
+/* LIGHT -> Light */
+const ideaName = id => id.charAt(0) + id.slice(1).toLowerCase();
+
 /* Splits a heading into lines that rise out of a mask, one after another. */
 function splitLines(el) {
   if (el.dataset.split) return;
@@ -48,13 +51,13 @@ function useReveal() {
     if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
     const io = new IntersectionObserver(entries => {
       for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0.04, rootMargin: '0px 0px 6% 0px' });
     els.forEach(e => io.observe(e));
     return () => io.disconnect();
   }, []);
 }
 
-function Masthead({ solid }) {
+function Masthead({ solid, hidden }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -67,7 +70,7 @@ function Masthead({ solid }) {
 
   return (
     <>
-      <header className={'masthead ' + (solid ? 'is-solid' : '')}>
+      <header className={'masthead ' + (solid ? 'is-solid' : '') + (hidden && !menuOpen ? ' is-hidden' : '')}>
         <a className="brand" href="#home"><img src="/marks/elephant-160.png" alt="" /><span>PROJECT 49</span></a>
         <button className={'menu-toggle ' + (menuOpen ? 'is-open' : '')} onClick={() => setMenuOpen(v => !v)}
           aria-expanded={menuOpen} aria-controls="site-menu" aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
@@ -102,17 +105,16 @@ function Opening() {
         <p className="eyebrow">Project 49 · Hyderabad</p>
         <h1 data-lines>One city. A million ways to live.<br /><em>Different lives deserve different homes.</em></h1>
         <p className="opening-description">
-          49 homes. 7 design principles. One limited collection. Bring your land, and we turn it into a home
-          designed around you.
+          Bring your land. Choose the idea your home grows from. We design it and build it, start to finish.
         </p>
-        <p className="opening-neuro">Built on neuroarchitecture: homes that do more for you than just look good.</p>
+        <p className="opening-neuro">Forty-nine homes in Hyderabad. Then we stop.</p>
         <div className="opening-actions">
-          <a className="enter-link" href="#ideas">Explore the 7 designs <span>↓</span></a>
-          <a className="enter-link quiet" href="#conversation">Start your journey <span>↗</span></a>
+          <a className="enter-link" href="#idea">How it works <span>↓</span></a>
+          <a className="enter-link quiet" href="#conversation">Tell us about your land <span>↗</span></a>
         </div>
       </div>
       <div className="opening-bottom">
-        <span>7 design principles · 49 homes</span>
+        <span>Seven ideas · Forty-nine homes</span>
         <a href="#idea">Scroll <i>↓</i></a>
         <span>Hyderabad</span>
       </div>
@@ -130,7 +132,7 @@ function Idea() {
         </div>
         <div className="gap-copy" data-reveal>
           <p>Every Project 49 home begins with your land and the way your family lives. You choose the design it grows from; we shape it, build it and hand you the keys.</p>
-          <p>Seven ways of living, each brought to life in only seven homes.</p>
+          <p>Seven ideas. Forty-nine homes in all. Then we stop, so every one of them stays one of one.</p>
           <p className="gap-answer">Forty-nine homes. Forty-nine stories.</p>
           <ol className="gap-steps">
             <li><span>01</span>Your land</li>
@@ -161,7 +163,7 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
             <p>{c.tags}</p>
             <p className="preview-whisper">{c.whisper}</p>
             <h3>{c.title}</h3>
-            <button onClick={() => enter(hover)}>Enter {c.id.toLowerCase()} <span>↗</span></button>
+            <button onClick={() => enter(hover)}>Enter {ideaName(c.id)} <span>↗</span></button>
           </div>
         </div>
         <div className="idea-list" data-reveal>
@@ -169,12 +171,12 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
             <button key={ch.id} className={'idea-row ' + (hover === i ? 'selected' : '')}
               onMouseEnter={() => setHover(i)} onFocus={() => setHover(i)} onClick={() => enter(i)}>
               <span className="idea-number">{ch.number}</span>
-              <span className="idea-name">{ch.id.toLowerCase()}</span>
+              <span className="idea-name">{ideaName(ch.id)}</span>
               <span className="idea-detail">{ch.title}</span>
               <span className="idea-arrow">{visited.includes(i) ? '◦' : '↗'}</span>
             </button>
           ))}
-          <p className="list-note">Seven homes will be built under each idea. Enter one to see it in film.</p>
+          <p className="list-note">Every home is drawn fresh for its land and its family. Enter an idea to see it in film.</p>
         </div>
       </div>
     </section>
@@ -201,7 +203,7 @@ function Places() {
       <div className="section-heading" data-reveal>
         <p className="eyebrow">03 / Where we build</p>
         <h2 data-lines>Hyderabad,<br /><em>seen from above.</em></h2>
-        <p>Where the forty-nine will stand. Tap a place to see it up close. Have land elsewhere in the city? Tell us; we will look at it.</p>
+        <p>On the green western edge of the city, where there is still room for a garden and a tree. Tap a place to see it up close. Have land somewhere else? Tell us; we will come and look.</p>
       </div>
       <div className="places-map" data-reveal data-parallax="4">
         {PLACES.video
@@ -245,7 +247,7 @@ function Conversation() {
   const [busy, setBusy] = useState(false);
   if (!CONTACT.enabled) return null;
   const wa = CONTACT.whatsapp ? `https://wa.me/${CONTACT.whatsapp.replace(/\D/g, '')}` : null;
-  const channel = CONTACT.endpoint || CONTACT.email;
+  const channel = CONTACT.endpoint || CONTACT.email || wa;
 
   const submit = async e => {
     e.preventDefault();
@@ -258,6 +260,12 @@ function Conversation() {
         setSent(true);
       } catch { alert('That did not go through. Please write to us directly instead.'); }
       setBusy(false);
+    } else if (!CONTACT.email && wa) {
+      const ideaLine = data.idea ? `The idea I like: ${data.idea}` : 'Not sure which idea yet';
+      const landLine = data.land === 'own' ? 'I own a plot' : data.land === 'looking' ? 'I am looking for land' : 'No land yet';
+      const text = `Hello Project 49,\n\nI am ${data.name}.\n${landLine}${data.location ? ` in ${data.location}` : ''}.\n${ideaLine}.${data.message ? `\n\n${data.message}` : ''}\n\nYou can reach me on ${data.reach}.`;
+      window.open(`${wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      setSent(true);
     } else {
       const body = `Name: ${data.name}\nPhone / email: ${data.reach}\nLand: ${data.land}\nLocation: ${data.location}\nIdea: ${data.idea}\n\n${data.message}`;
       location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent('Project 49: my land')}&body=${encodeURIComponent(body)}`;
@@ -274,7 +282,7 @@ function Conversation() {
         <div className="private-links">
           {CONTACT.name && <span>{CONTACT.name}</span>}
           {CONTACT.email && <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>}
-          {wa && channel && <a href={wa} target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a>}
+          {wa && (CONTACT.endpoint || CONTACT.email) && <a href={wa} target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a>}
           {CONTACT.phone && <a href={`tel:${CONTACT.phone.replace(/\s/g, '')}`}>{CONTACT.phone}</a>}
           {CONTACT.instagram && <a href={`https://instagram.com/${CONTACT.instagram}`} target="_blank" rel="noopener noreferrer">@{CONTACT.instagram}</a>}
         </div>
@@ -282,7 +290,7 @@ function Conversation() {
       <div className="conversation-form" data-reveal>
         {channel ? (
           sent ? (
-            <p className="sent">Thank you. We will call you back within a day.</p>
+            <p className="sent">Thank you. {CONTACT.endpoint || CONTACT.email ? 'We will call you back within a day.' : 'Your message is ready in WhatsApp; press send and we will call you back within a day.'}</p>
           ) : (
             <form onSubmit={submit}>
               <label>Your name<input name="name" required autoComplete="name" /></label>
@@ -298,11 +306,12 @@ function Conversation() {
               <label>An idea you like
                 <select name="idea" defaultValue="">
                   <option value="">Not sure yet</option>
-                  {chapters.map(c => <option key={c.id} value={c.id}>{c.id.toLowerCase()} · {c.title}</option>)}
+                  {chapters.map(c => <option key={c.id} value={c.id}>{ideaName(c.id)} · {c.title}</option>)}
                 </select>
               </label>
               <label>Anything else<textarea name="message" rows="3" /></label>
-              <button type="submit" className="enter-link" disabled={busy}>{busy ? 'Sending…' : 'Start a conversation'} <span>↗</span></button>
+              <button type="submit" className="enter-link" disabled={busy}>{busy ? 'Sending…' : (CONTACT.endpoint || CONTACT.email ? 'Start a conversation' : 'Send on WhatsApp')} <span>↗</span></button>
+              {!CONTACT.endpoint && !CONTACT.email && wa && <small className="form-alt">Or message us directly on <a href={wa} target="_blank" rel="noopener noreferrer">{CONTACT.whatsapp}</a></small>}
             </form>
           )
         ) : (
@@ -331,7 +340,7 @@ function Footer() {
           <a href="#conversation">Start a conversation</a>
         </nav>
         <div className="footer-ideas" aria-hidden="true">
-          {chapters.map(c => <span key={c.id}>{c.id.toLowerCase()}</span>)}
+          {chapters.map(c => <span key={c.id}>{ideaName(c.id)}</span>)}
         </div>
       </div>
       {CONTACT.rera && <p className="rera-line">{CONTACT.rera}</p>}
@@ -347,7 +356,7 @@ export default function App() {
   const [hover, setHover] = useState(0), [opened, setOpened] = useState(null), [frame, setFrame] = useState(0);
   const [sound, setSound] = useState(false), [volume, setVolume] = useState(.5), [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0), [visited, setVisited] = useState([]), [muted, setMuted] = useState(false);
-  const [solid, setSolid] = useState(false);
+  const [solid, setSolid] = useState(false), [hideBar, setHideBar] = useState(false);
   const engine = useRef(null), trigger = useRef(null);
   const chapter = opened === null ? null : chapters[opened], scene = chapter?.scenes[frame];
 
@@ -356,8 +365,18 @@ export default function App() {
   useEffect(() => { engine.current = new Soundscape(); return () => engine.current.dispose(); }, []);
   useEffect(() => { if (sound) engine.current.scene(chapter?.id || 'HOME', scene?.id || ''); }, [sound, chapter, scene]);
   useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > window.innerHeight * 0.8);
-    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+    /* Clear over the hero; solid once the hero has gone; tucks away while you read
+       downwards and comes back the moment you scroll up. */
+    let last = window.scrollY, queued = false;
+    const draw = () => {
+      queued = false;
+      const y = window.scrollY, hero = document.getElementById('home');
+      const heroEnd = hero ? hero.offsetTop + hero.offsetHeight - 90 : window.innerHeight;
+      setSolid(y > heroEnd);
+      if (Math.abs(y - last) > 6) { setHideBar(y > last && y > heroEnd - window.innerHeight * 0.6); last = y; }
+    };
+    const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
+    draw(); window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -397,7 +416,7 @@ export default function App() {
   return (
     <>
       <div className="site-shell" inert={chapter ? true : undefined}>
-        <Masthead solid={solid} />
+        <Masthead solid={solid} hidden={hideBar} />
         <main>
           <IntroFilm onEnterIdea={enter} />
           <Opening />

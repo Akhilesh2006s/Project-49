@@ -12,14 +12,14 @@ import './ideas-gate.css';
    Clicking an idea opens that idea; the rest of the website continues below when you scroll. */
 
 const FILM = '/film/p49-what-holds.mp4';
-const GATE_STARTS_AT = 59.92;          // second of the film where the Ideas Gate begins
+const GATE_STARTS_AT = 49.54;          // second of the film where the Ideas Gate begins
 const SEEN_KEY = 'p49-intro-seen';
 const CC_KEY = 'p49-film-captions';     // remembers if a visitor turned captions off
 
 function captionsOn() {
   try { return localStorage.getItem(CC_KEY) !== 'off'; } catch { return true; }
 }
-const SHADE_UNTIL = 56.3;               // the end card and the gate stay clean
+const SHADE_UNTIL = 49.5;               // the end card and the gate stay clean
 const captionAt = t => FILM_CAPTIONS.findIndex(([s, e]) => t >= s && t < e);
 
 function firstOverlay() {
@@ -140,14 +140,14 @@ export default function IntroFilm({ onEnterIdea }) {
           {overlay === 'film' && (
             <>
               {/* Same 16:9 box as the picture (object-fit: contain), so captions always sit inside the frame */}
-              <div className={'p49-film-frame' + (cc && shade ? ' is-shaded' : '')} aria-hidden="true">
+              <div className={'p49-film-frame' + (cc && shade && FILM_CAPTIONS.length > 0 ? ' is-shaded' : '')} aria-hidden="true">
                 <div className="p49-film-shade" />
                 <div className="p49-film-captions">
                   {cc && cue >= 0 && <p key={cue} className="p49-film-caption">{FILM_CAPTIONS[cue][2]}</p>}
                 </div>
               </div>
               <button className="p49-intro-skip p49-intro-sound" onClick={toggleSound}>{muted ? 'Sound on' : 'Sound off'}</button>
-              <button className="p49-intro-skip p49-intro-cc" onClick={toggleCaptions} aria-pressed={cc}>{cc ? 'Captions off' : 'Captions on'}</button>
+              {FILM_CAPTIONS.length > 0 && <button className="p49-intro-skip p49-intro-cc" onClick={toggleCaptions} aria-pressed={cc}>{cc ? 'Captions off' : 'Captions on'}</button>}
               <button className="p49-intro-skip" onClick={skip}>Skip film</button>
             </>
           )}

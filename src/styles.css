@@ -467,3 +467,12 @@ h1 em { font-size: .82em }
 
 /* headings outside a revealed block are shown at once */
 .footer [data-lines] .ln > i, footer [data-lines] .ln > i { transform: none; opacity: 1 }
+
+/* ---------- Oct 2026 polish ---------- */
+/* the bar tucks away while you read down, returns when you scroll up */
+.masthead.is-hidden { transform: translateY(-110%); opacity: 0; pointer-events: none }
+.masthead { transition: background .5s, height .5s, border-color .5s, opacity .45s, transform .45s var(--ease) }
+/* sections arrive sooner and faster, so there is never an empty screen */
+[data-reveal] { transform: translateY(18px); transition: opacity .8s var(--ease), transform .8s var(--ease) }
+.conversation-form .form-alt { display: block; margin-top: 4px; font-size: 12px; letter-spacing: .04em; color: #a9b0a3; text-transform: none }
+.conversation-form .form-alt a { color: var(--gold); border-bottom: 1px solid #d7c09c55 }
