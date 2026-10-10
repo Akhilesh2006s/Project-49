@@ -12,14 +12,14 @@ import './ideas-gate.css';
    Clicking an idea opens that idea; the rest of the website continues below when you scroll. */
 
 const FILM = '/film/p49-what-holds.mp4';
-const GATE_STARTS_AT = 49.54;          // second of the film where the Ideas Gate begins
+const GATE_STARTS_AT = 51.58;          // second of the film where the Ideas Gate begins
 const SEEN_KEY = 'p49-intro-seen';
 const CC_KEY = 'p49-film-captions';     // remembers if a visitor turned captions off
 
 function captionsOn() {
   try { return localStorage.getItem(CC_KEY) !== 'off'; } catch { return true; }
 }
-const SHADE_UNTIL = 49.5;               // the end card and the gate stay clean
+const SHADE_UNTIL = 51.54;               // the end card and the gate stay clean
 const captionAt = t => FILM_CAPTIONS.findIndex(([s, e]) => t >= s && t < e);
 
 function firstOverlay() {
@@ -134,7 +134,7 @@ export default function IntroFilm({ onEnterIdea }) {
 
   return (
     <>
-      <section className="p49-gate-hero" id="start" ref={heroRef} aria-label="Project 49 - choose an idea">
+      <section className="p49-gate-hero" id="start" ref={heroRef} aria-label="Project 49 - choose a philosophy">
         <div ref={gateEl} />
       </section>
 

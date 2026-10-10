@@ -5,7 +5,9 @@ import PLACES from './data/places';
 import { Soundscape } from './sound';
 import IdeaPreview from './IdeaPreview';
 import Cinema from './Cinema';
+import LandModel from './LandModel';
 import IntroFilm from './intro/IntroFilm';
+import { Threshold, LitStatement, Delivery, Scarcity, Rail, Cursor } from './World';
 
 /* LIGHT -> Light */
 const ideaName = id => id.charAt(0) + id.slice(1).toLowerCase();
@@ -102,7 +104,8 @@ function Masthead({ solid, hidden }) {
         <p className="eyebrow">Project 49 · Hyderabad</p>
         <nav aria-label="Menu">
           <a href="#idea" onClick={closeMenu}><span>01</span>The idea</a>
-          <a href="#ideas" onClick={closeMenu}><span>02</span>Seven ideas</a>
+          <a href="#ideas" onClick={closeMenu}><span>02</span>Design philosophies</a>
+          <a href="#delivery" onClick={closeMenu}><span>·</span>How we work</a>
           <a href="#places" onClick={closeMenu}><span>03</span>Where we build</a>
           <a href="#people" onClick={closeMenu}><span>04</span>The people</a>
           <a href="#conversation" onClick={closeMenu}><span>05</span>Talk to us</a>
@@ -116,31 +119,33 @@ function Masthead({ solid, hidden }) {
 
 function Opening() {
   return (
-    <section className="cine cine-hero" id="home">
+    <Threshold>
+    <div className="cine cine-hero">
       <Film name="atrium" parallax={5} />
       <div className="cine-letterbox" aria-hidden="true" />
       <div className="cine-hero-copy">
         <p className="eyebrow">Project 49 · Hyderabad</p>
-        <h1 data-lines>One city. A million ways to live.<br /><em>Different lives deserve different homes.</em></h1>
-        <p className="cine-hero-line">Forty-nine homes. Built on your land. Then we stop.</p>
+        <h1>Same city. Different lives.<br /><em>Why should the homes be the same?</em></h1>
+        <p className="cine-hero-line">Built around a family. Not around a floor plan.</p>
         <div className="opening-actions">
-          <a className="enter-link" href="#idea">Begin <span>↓</span></a>
-          <a className="enter-link quiet" href="#conversation">Tell us about your land <span>↗</span></a>
+          <a className="enter-link" href="#idea" data-cursor="Begin">Begin <span>↓</span></a>
+          <a className="enter-link quiet" href="#conversation" data-cursor="Talk">Tell us about your land <span>↗</span></a>
         </div>
       </div>
       <div className="opening-bottom">
-        <span>Seven ideas · Forty-nine homes</span>
+        <span>49 homes · 7 ideas</span>
         <a href="#idea">Scroll <i>↓</i></a>
         <span>Hyderabad</span>
       </div>
-    </section>
+    </div>
+    </Threshold>
   );
 }
 
 const CHAPTERS = [
-  { n: '01', film: 'land', title: ['It begins', 'with your land.'], line: 'Every Project 49 home stands on land the family already owns. We walk it with you first: the light, the trees, the way the ground falls.' },
-  { n: '02', film: 'idea', title: ['Then,', 'an idea.'], line: 'You choose the idea your home grows from: light, air, art, roots, earth, silence or future. Then it is drawn fresh, for your land and your family alone.' },
-  { n: '03', film: 'home', title: ['And finally,', 'your home.'], line: 'We design it, build it and hand you the keys. Forty-nine homes in all. Then we stop, so every one of them stays one of one.' },
+  { n: '01', film: 'land', title: ['It begins', 'with your land.'], line: 'Every great home starts with its ground. We walk it with you first: the light, the trees, the way the ground falls.' },
+  { n: '02', film: 'idea', title: ['Then,', 'a philosophy.'], line: 'You choose the philosophy your home grows from: light, air, art, roots, earth, silence or future. Then it is drawn exclusively for your land and your family alone.' },
+  { n: '03', film: 'home', title: ['And finally,', 'your home.'], line: 'We design it, build it and hand you the keys. A home that is yours alone, and stays one of one.' },
 ];
 
 function Idea() {
@@ -180,9 +185,9 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
   return (
     <section className="ideas-section" id="ideas">
       <div className="section-heading" data-reveal>
-        <p className="eyebrow">02 / The seven ideas</p>
-        <h2 data-lines>Seven ways to build.<br /><em>Which one is yours?</em></h2>
-        <p>Each idea is a way of thinking about a house, not a fixed plan. Your home is drawn fresh for your land and your family.</p>
+        <p className="eyebrow">02 / Seven design philosophies</p>
+        <h2 data-lines>Seven ways to live.<br /><em>Which one feels like you?</em></h2>
+        <p>Each philosophy is a way of living in a home, not a fixed plan. Yours is shaped around your land, your family and the way you want to live.</p>
       </div>
       <div className="ideas-composition">
         <div className="idea-preview" data-reveal>
@@ -193,20 +198,20 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
             <p>{c.tags}</p>
             <p className="preview-whisper">{c.whisper}</p>
             <h3>{c.title}</h3>
-            <button onClick={() => enter(hover)}>Enter {ideaName(c.id)} <span>↗</span></button>
+            <button onClick={() => enter(hover)} data-cursor="Explore">Explore {ideaName(c.id)} <span>↗</span></button>
           </div>
         </div>
         <div className="idea-list" data-reveal>
           {chapters.map((ch, i) => (
             <button key={ch.id} className={'idea-row ' + (hover === i ? 'selected' : '')}
-              onMouseEnter={() => setHover(i)} onFocus={() => setHover(i)} onClick={() => enter(i)}>
+              onMouseEnter={() => setHover(i)} onFocus={() => setHover(i)} onClick={() => enter(i)} data-cursor="Explore">
               <span className="idea-number">{ch.number}</span>
               <span className="idea-name">{ideaName(ch.id)}</span>
               <span className="idea-detail">{ch.title}</span>
               <span className="idea-arrow">{visited.includes(i) ? '◦' : '↗'}</span>
             </button>
           ))}
-          <p className="list-note">Every home is drawn fresh for its land and its family. Enter an idea to see it in film.</p>
+          <p className="list-note">Explore a philosophy to see how it comes to life.</p>
         </div>
       </div>
     </section>
@@ -214,35 +219,40 @@ function Ideas({ hover, setHover, enter, opened, visited }) {
 }
 
 function Places() {
-  const ref = useRef(null);
+  const [active, setActive] = useState(null), [touched, setTouched] = useState(false);
+  const wrap = useRef(null);
+  /* A slow guided tour of the places until the visitor takes over. */
   useEffect(() => {
-    const L = window.L;
-    if (!ref.current || !L || PLACES.video) return;
-    const map = L.map(ref.current, { center: PLACES.center, zoom: PLACES.zoom, zoomSnap: 0, zoomControl: false, scrollWheelZoom: false, attributionControl: false, dragging: !L.Browser.mobile });
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
-    PLACES.pins.forEach(p => {
-      L.marker([p.lat, p.lng], { icon: L.divIcon({ className: 'pin', html: `<i></i><b>${p.name}</b>`, iconSize: [0, 0] }) })
-        .addTo(map).on('click', () => map.flyTo([p.lat, p.lng], 16, { duration: 1.6 }));
-    });
-    map.on('click', () => map.flyTo(PLACES.center, PLACES.zoom, { duration: 1.4 }));
-    ref.current._map = map;
-    return () => map.remove();
-  }, []);
+    if (touched || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !wrap.current) return;
+    let timer = null, i = -1;
+    const io = new IntersectionObserver(([e]) => {
+      clearInterval(timer);
+      if (!e.isIntersecting) return;
+      timer = setInterval(() => { i = (i + 1) % (PLACES.pins.length + 1); setActive(i === PLACES.pins.length ? null : i); }, 4200);
+    }, { threshold: 0.35 });
+    io.observe(wrap.current);
+    return () => { clearInterval(timer); io.disconnect(); };
+  }, [touched]);
+  const pick = i => { setTouched(true); setActive(i); };
   return (
     <section className="places" id="places">
       <div className="section-heading" data-reveal>
         <p className="eyebrow">03 / Where we build</p>
-        <h2 data-lines>Hyderabad,<br /><em>seen from above.</em></h2>
-        <p>On the green western edge of the city, where there is still room for a garden and a tree. Tap a place to see it up close. Have land somewhere else? Tell us; we will come and look.</p>
+        <h2 data-lines>The green west<br /><em>of Hyderabad.</em></h2>
+        <p>Where there is still room for a garden and a tree, and the city is close. Select a place to fly to it. Have land somewhere else? Tell us; we will come and look.</p>
       </div>
-      <div className="places-map" data-reveal data-parallax="4">
-        {PLACES.video
-          ? <video src={PLACES.video} poster={PLACES.poster} autoPlay muted loop playsInline />
-          : <div ref={ref} className="places-canvas" aria-label="Satellite map of Hyderabad with the Project 49 locations" />}
-        <div className="places-tint" />
+      <div className="places-map land-wrap" ref={wrap} data-reveal>
+        <LandModel places={PLACES.pins} active={active} onSelect={pick} />
+        <p className="land-hint" aria-hidden="true">Move to tilt · select a light to fly there</p>
       </div>
       <ul className="places-list" data-reveal>
-        {PLACES.pins.map(p => <li key={p.name}><strong>{p.name}</strong><span>{p.note}</span></li>)}
+        {PLACES.pins.map((p, i) => (
+          <li key={p.name}>
+            <button type="button" className={active === i ? 'on' : ''} aria-pressed={active === i} onClick={() => pick(active === i ? null : i)} data-cursor="Fly">
+              <strong>{p.name}</strong><span>{p.note}</span>
+            </button>
+          </li>
+        ))}
       </ul>
     </section>
   );
@@ -256,20 +266,17 @@ function People() {
       <p className="eyebrow" data-reveal>04 / The people</p>
       <div className="credits-row" data-reveal>
         <div className="credit">
-          <span className="credit-studio">AYRA</span>
-          <strong>Saketh</strong>
-          <em>Architect</em>
-          <p>Designs your home.</p>
+          <strong>Saketh<br />Bharadwaj</strong>
+          <em>Principal Architect</em>
+          <p>Shapes every home around your family, your land and the light.</p>
         </div>
-        <div className="credit-x" aria-hidden="true">×</div>
         <div className="credit">
-          <span className="credit-studio">ANXA</span>
-          <strong>Divya</strong>
-          <em>Builder</em>
-          <p>Your one point of contact, start to finish.</p>
+          <strong>Divya<br />Dacharla</strong>
+          <em>Managing Partner</em>
+          <p>Your one point of contact, from the first visit to the day you move in.</p>
         </div>
       </div>
-      <p className="credits-note" data-reveal>Two people. One home. From the first sketch to the keys.</p>
+      <p className="credits-note" data-reveal>Our people stay with you personally, from the first conversation to the day you move in.</p>
     </section>
   );
 }
@@ -293,7 +300,7 @@ function Conversation() {
       } catch { alert('That did not go through. Please write to us directly instead.'); }
       setBusy(false);
     } else if (!CONTACT.email && wa) {
-      const ideaLine = data.idea ? `The idea I like: ${data.idea}` : 'Not sure which idea yet';
+      const ideaLine = data.idea ? `The philosophy I like: ${data.idea}` : 'Not sure which philosophy yet';
       const landLine = data.land === 'own' ? 'I own a plot' : data.land === 'looking' ? 'I am looking for land' : 'No land yet';
       const text = `Hello Project 49,\n\nI am ${data.name}.\n${landLine}${data.location ? ` in ${data.location}` : ''}.\n${ideaLine}.${data.message ? `\n\n${data.message}` : ''}\n\nYou can reach me on ${data.reach}.`;
       window.open(`${wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
@@ -336,7 +343,7 @@ function Conversation() {
                 </select>
               </label>
               <label>Where is it?<input name="location" autoComplete="address-level2" /></label>
-              <label>An idea you like
+              <label>A philosophy that speaks to you
                 <select name="idea" defaultValue="">
                   <option value="">Not sure yet</option>
                   {chapters.map(c => <option key={c.id} value={c.id}>{ideaName(c.id)} · {c.title}</option>)}
@@ -362,12 +369,15 @@ function Footer() {
     <footer id="collaboration">
       <div className="footer-grid">
         <div>
-          <p className="eyebrow">Design × Build</p>
-          <h2 data-lines>AYRA <em>×</em> ANXA</h2>
+          <a className="footer-brand" href="#home" aria-label="Project 49, back to the top">
+            <img src="/marks/elephant-mark.png" alt="" width="480" height="322" />
+            <i className="footer-rule" aria-hidden="true" />
+            <span>PROJECT 49</span>
+          </a>
         </div>
         <nav className="footer-nav" aria-label="Sections">
           <a href="#idea">The idea</a>
-          <a href="#ideas">Seven ideas</a>
+          <a href="#ideas">Design philosophies</a>
           <a href="#places">Where we build</a>
           <a href="#people">The people</a>
           <a href="#conversation">Start a conversation</a>
@@ -450,14 +460,19 @@ export default function App() {
     <>
       <div className="site-shell" inert={chapter ? true : undefined}>
         <Masthead solid={solid} hidden={hideBar} />
+        <Rail />
+        <Cursor />
         <main>
           <IntroFilm onEnterIdea={enter} />
           <Opening />
           <Idea />
+          <LitStatement id="belief" eyebrow="What we believe" lines={['Luxury should be personal.', 'The philosophy may repeat. The architecture never does.']} note="Built around a family. Not around a floor plan." />
           <Ideas hover={hover} setHover={setHover} enter={enter} opened={opened} visited={visited} />
+          <Delivery />
           <Interlude />
           <Places />
           <People />
+          <Scarcity />
           <Conversation />
         </main>
         <Footer />
