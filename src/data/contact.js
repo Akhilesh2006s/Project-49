@@ -15,7 +15,7 @@ export const CONTACT = {
   enabled: true,
   eyebrow: 'Talk to us',
   line: 'Tell us about your land.',
-  note: 'Where it is, what you have in mind, and which of the seven ideas you like. We will call you back.',
+  note: 'Where it is, how your family likes to live, and which philosophy speaks to you. We will call you back and come to see it with you.',
   name: '',
   email: '',
   endpoint: '',

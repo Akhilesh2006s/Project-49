@@ -41,10 +41,10 @@ export default function Cinema({ chapter, scene, frame, opened, paused, progress
       <div className="cinema-shade" />
       <div className="cinema-header">
         <span>PROJECT 49 <b>/ {chapter.number} / {chapter.id}</b></span>
-        <button ref={closeRef} onClick={onLeave} aria-label="Close film and return to the seven ideas">All ideas <span>×</span></button>
+        <button ref={closeRef} onClick={onLeave} aria-label="Close film and return to the design philosophies">All philosophies <span>×</span></button>
       </div>
       <div className="chapter-entry" key={chapter.id} aria-hidden="true">
-        <span>{chapter.number} / Seven ideas</span><strong>{chapter.id.toLowerCase()}</strong><em>{chapter.whisper || chapter.title}</em>
+        <span>{chapter.number} / Design philosophies</span><strong>{chapter.id.toLowerCase()}</strong><em>{chapter.whisper || chapter.title}</em>
       </div>
       <div className="cinema-copy" key={`${chapter.id}-${frame}`}>
         <p className="eyebrow">{chapter.id} / {scene.eyebrow}</p>
