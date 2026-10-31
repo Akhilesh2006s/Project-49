@@ -200,7 +200,7 @@ function Opening() {
 
 const CHAPTERS = [
   { n: '01', film: 'land', title: ['It begins', 'with your land.'], line: 'Every great home starts with its ground. We walk it with you first: the light, the trees, the way the ground falls.' },
-  { n: '02', film: 'idea', title: ['Then,', 'a philosophy.'], line: 'You choose the philosophy your home grows from: light, air, art, roots, earth, silence or future. Then it is drawn exclusively for your land and your family alone.' },
+  { n: '02', film: 'idea', title: ['Then,', 'a philosophy.'], line: 'You choose the philosophy your home grows from: light, air, art, roots, earth, silence or future. Then it is drawn for your land and your family alone.' },
   { n: '03', film: 'home', title: ['And finally,', 'your home.'], line: 'We design it, build it and hand you the keys. A home that is yours alone, and stays one of one.' },
 ];
 
@@ -336,10 +336,10 @@ function AddressSearch({ target, setTarget, onFound }) {
   return (
     <div className="address">
       <form className={'address-form' + (open && (list.length || !q) ? ' is-open' : '')} onSubmit={go} role="search" onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget)) setTimeout(() => setOpen(false), 120); }}>
-        <label className="sr-only" htmlFor="addr">Your plot's address or area</label>
+        <label className="sr-only" htmlFor="addr">Your plot’s address or area</label>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l5 5" /></svg>
         <input id="addr" value={q} onChange={e => { setQ(e.target.value); setOpen(true); setHi(-1); }} onFocus={() => setOpen(true)} onKeyDown={keys}
-          placeholder="Type your plot's address, area or village" autoComplete="off" role="combobox" aria-expanded={open} aria-controls="addr-list" aria-autocomplete="list" />
+          placeholder="Type your plot’s address, area or village" autoComplete="off" role="combobox" aria-expanded={open} aria-controls="addr-list" aria-autocomplete="list" />
         <button type="submit" disabled={busy} data-cursor="Find">{busy ? 'Finding…' : 'Find my land'}</button>
         {open && list.length > 0 && (
           <ul className="address-suggest" id="addr-list" role="listbox">
@@ -408,7 +408,7 @@ function Places() {
       <div className="section-heading" data-reveal>
         <p className="eyebrow">03 / Where we build</p>
         <h2 data-lines>The green west<br /><em>of Hyderabad.</em></h2>
-        <p>Where there is still room for a garden and a tree, and the city is close. Type your plot's address to fly to it, or select any place on the map.</p>
+        <p>Where there is still room for a garden and a tree, and the city is close. Type your plot’s address to fly to it, or select any place on the map.</p>
       </div>
       <div className="places-map land-wrap" data-reveal>
         <CityModel places={PLACES.pins} target={target} onPick={pick} />
@@ -518,7 +518,7 @@ function Conversation() {
         <h2 data-lines>{CONTACT.line}</h2>
         <p>{CONTACT.note}</p>
         <ol className="promise">
-          <li><span>01</span>We call you back within a day.</li>
+          <li><span>01</span>We call you back within one working day.</li>
           <li><span>02</span>We come and walk the land with you.</li>
           <li><span>03</span>One person stays with you, start to finish.</li>
         </ol>
@@ -571,7 +571,7 @@ function Conversation() {
             </div>
             <div className="composer-foot">
               <a className="btn-solid" href={href} target="_blank" rel="noopener noreferrer" data-cursor="Begin" onClick={e => { if (!phoneOk) { e.preventDefault(); setNeedPhone(true); phoneRef.current && phoneRef.current.focus(); return; } save(); setSent(true); }}>Begin a private conversation <span>↗</span></a>
-              <small>{sent ? (CONTACT.endpoint ? 'We have your note. Press send in WhatsApp too, and we will call you back within a day.' : 'Your note is ready in WhatsApp. Press send there and we will call you back within a day.') : CONTACT.endpoint ? 'Keeps your note with us privately and opens WhatsApp with it.' : wa ? 'Opens WhatsApp with your note. Nothing is sent until you choose to.' : 'Opens your email with the note written out.'}</small>
+              <small>{sent ? (CONTACT.endpoint ? 'We have your note. Press send in WhatsApp too, and we will call you back within one working day.' : 'Your note is ready in WhatsApp. Press send there and we will call you back within one working day.') : CONTACT.endpoint ? 'Keeps your note with us privately and opens WhatsApp with it.' : wa ? 'Opens WhatsApp with your note. Nothing is sent until you choose to.' : 'Opens your email with the note written out.'}</small>
             </div>
           </form>
         ) : (
